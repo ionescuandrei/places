@@ -1,8 +1,4 @@
-import {
-  ADD_PLACE,
-  DELETE_PLACE
-  
-} from "../actions/actionTypes";
+import { ADD_PLACE, DELETE_PLACE } from "../actions/actionTypes";
 
 const initialState = {
   places: []
@@ -14,12 +10,12 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         places: state.places.concat({
-          key: Math.random(),
+          key: Math.random().toString(),
           name: action.placeName,
           image: {
-            uri:
-              "https://c1.staticflickr.com/5/4096/4744241983_34023bf303_b.jpg"
-          }
+            uri: action.image.uri
+          },
+          location: action.location
         })
       };
     case DELETE_PLACE:
@@ -29,7 +25,7 @@ const reducer = (state = initialState, action) => {
           return place.key !== action.placeKey;
         }),
         selectedPlace: null
-      };    
+      };
     default:
       return state;
   }

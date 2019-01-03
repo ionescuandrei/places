@@ -47,7 +47,9 @@ const startTab =()=>{
                        bottomTab: {
                                       text: 'Find',
                                       icon:findTab,
-                                      testID: 'FIRST_TAB_BAR_BUTTON'
+                                      testID: 'FIRST_TAB_BAR_BUTTON',
+                                      iconColor: 'red',
+                                      selectedIconColor: 'blue'
                                     }
     
                       }
@@ -84,7 +86,9 @@ const startTab =()=>{
                         bottomTab: {
                           text: 'Share',
                           icon: shareTab,
-                          testID: 'SECOND_TAB_BAR_BUTTON'
+                          testID: 'SECOND_TAB_BAR_BUTTON',
+                          iconColor: 'red',
+                          selectedIconColor: 'blue'
                         },
                         topBar: {
                           leftButtons: [

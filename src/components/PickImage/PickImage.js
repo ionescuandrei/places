@@ -1,24 +1,41 @@
-import React, { Component } from 'react';
-import { View, Button, StyleSheet, Image } from 'react-native';
-import imagePlaceholder from '../../assets/beautiful-place.jpg';
+import React, { Component } from "react";
+import { View, Button, StyleSheet, Image } from "react-native";
+import imagePlaceholder from "../../assets/beautiful-place.jpg";
+import ImagePicker from "react-native-image-picker";
 export default class PickImage extends Component {
-  
+  state = {
+    pickedImage: null
+  };
+  pickImageHandler = () => {
+    ImagePicker.showImagePicker({ title: "Pick an image" }, res => {
+      if (res.didCancel) {
+        console.log("User Canceled");
+      } else if (res.error) {
+        console.log("error");
+      } else {
+        this.setState({
+          pickedImage: { uri: res.uri }
+        });
+        this.props.onImagePicked({ uri: res.uri, base64: res.data });
+      }
+    });
+  };
   render() {
     return (
       <View style={styles.container}>
-      <View style={styles.placeholder}>
-      <Image source={imagePlaceholder} style={styles.previewImage} />
-    </View>
-    <View style={styles.button}>
-      <Button title="Pick Image" onPress={()=>alert('Button pressed')} />
-    </View>
-    </View>
+        <View style={styles.placeholder}>
+          <Image source={this.state.pickedImage} style={styles.previewImage} />
+        </View>
+        <View style={styles.button}>
+          <Button title="Pick Image" onPress={this.pickImageHandler} />
+        </View>
+      </View>
     );
   }
 }
 const styles = StyleSheet.create({
   container: {
-    width:"100%",
+    width: "100%",
     alignItems: "center"
   },
   placeholder: {
@@ -32,7 +49,7 @@ const styles = StyleSheet.create({
     margin: 8
   },
   previewImage: {
-      width: "100%",
-      height: "100%"
+    width: "100%",
+    height: "100%"
   }
 });
