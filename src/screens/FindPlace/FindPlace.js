@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import { connect } from "react-redux";
 import { Navigation } from "react-native-navigation";
+import { getPlace } from "../../store/actions/index";
 
 import PlaceList from "../../components/PlaceList/PlaceList";
 class FindPlaces extends Component {
@@ -19,6 +20,9 @@ class FindPlaces extends Component {
   constructor(props) {
     super(props);
     Navigation.events().bindComponent(this);
+  }
+  componentDidMount() {
+    this.props.onLoadPlaces();
   }
   placesSearchHandler = () => {
     this.setState({});
@@ -135,9 +139,17 @@ const styles = StyleSheet.create({
     fontSize: 26
   }
 });
+const mapDispatchToProps = dispatch => {
+  return {
+    onLoadPlaces: () => dispatch(getPlace())
+  };
+};
 const mapStateToProps = state => {
   return {
     places: state.places.places
   };
 };
-export default connect(mapStateToProps)(FindPlaces);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(FindPlaces);

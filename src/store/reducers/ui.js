@@ -1,22 +1,20 @@
-import { SET_PLACE, REMOVE_PLACE } from "../actions/actionTypes";
+import { UI_START_LOADING, UI_STOP_LOADING } from "../actions/actionTypes";
 
 const initialState = {
-  places: []
+  isLoading: false
 };
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case SET_PLACE:
+    case UI_START_LOADING:
       return {
         ...state,
-        places: action.places
+        isLoading: true
       };
-    case REMOVE_PLACE:
+    case UI_STOP_LOADING:
       return {
         ...state,
-        places: state.places.filter(place => {
-          return place.key !== action.key;
-        })
+        isLoading: false
       };
     default:
       return state;
