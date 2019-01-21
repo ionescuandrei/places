@@ -114,7 +114,7 @@ class SharePlace extends Component {
         }
       />
     );
-    if (this.props.isLoading) {
+    if (!this.props.isLoading) {
       submitButton = <ActivityIndicator />;
     }
     return (
