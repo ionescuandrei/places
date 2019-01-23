@@ -1,16 +1,25 @@
-import { REMOVE_PLACE, SET_PLACE } from "./actionTypes";
+import {
+  REMOVE_PLACE,
+  SET_PLACE,
+  PLACE_ADDED,
+  START_ADD_PLACE
+} from "./actionTypes";
 import { uiStartLoading, uiStopLoading, authGetToken } from "./index";
-
+export const startAddPlace = () => {
+  return {
+    type: START_ADD_PLACE
+  };
+};
 export const addPlace = (placeName, location, image) => {
   return dispatch => {
     let authToken;
+    dispatch(uiStartLoading());
     dispatch(authGetToken())
       .catch(() => {
         alert("No valid token found!");
       })
       .then(token => {
         authToken = token;
-        dispatch(uiStartLoading());
         return fetch(
           "https://us-central1-voucher-221208.cloudfunctions.net/storeImage",
           {
@@ -41,6 +50,7 @@ export const addPlace = (placeName, location, image) => {
           .then(res => res.json())
           .then(parsedRes => {
             console.log(parsedRes);
+            dispatch(placeAdded());
             dispatch(uiStopLoading());
           })
           .catch(err => {
@@ -54,6 +64,11 @@ export const addPlace = (placeName, location, image) => {
         alert("Something went wrong please try again!");
         console.log(err);
       });
+  };
+};
+export const placeAdded = () => {
+  return {
+    type: PLACE_ADDED
   };
 };
 export const getPlace = () => {
@@ -101,7 +116,7 @@ export const deletePlace = key => {
       .then(token => {
         dispatch(removePlace(key));
         return fetch(
-          "https://awesome-places-1511248766522.firebaseio.com/places/" +
+          "https://voucher-221208.firebaseio.com/places/" +
             key +
             ".json?auth=" +
             token,

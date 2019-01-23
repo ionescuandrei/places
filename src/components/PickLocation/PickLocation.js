@@ -2,16 +2,21 @@ import React, { Component } from "react";
 import { View, Text, StyleSheet, Button, Dimensions } from "react-native";
 import MapView from "react-native-maps";
 export default class PickLocation extends Component {
-  state = {
-    focusedLoction: {
-      latitude: 37.78825,
-      longitude: -122.4324,
-      latitudeDelta: 0.0122,
-      longitudeDelta:
-        (Dimensions.get("window").width / Dimensions.get("window").height) *
-        0.0122
-    },
-    locationChosen: false
+  componentWillMount() {
+    this.reset();
+  }
+  reset = () => {
+    this.setState({
+      focusedLoction: {
+        latitude: 37.78825,
+        longitude: -122.4324,
+        latitudeDelta: 0.0122,
+        longitudeDelta:
+          (Dimensions.get("window").width / Dimensions.get("window").height) *
+          0.0122
+      },
+      locationChosen: false
+    });
   };
   pickLocationHandler = event => {
     const coords = event.nativeEvent.coordinate;

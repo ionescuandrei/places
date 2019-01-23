@@ -10,7 +10,7 @@ import {
 } from "react-native";
 
 import { connect } from "react-redux";
-import { addPlace } from "../../store/actions/index";
+import { addPlace, startAddPlace } from "../../store/actions/index";
 import { Navigation } from "react-native-navigation";
 import MainText from "../../UI/mainText/MainText";
 import HeadingText from "../../UI/headingText/HeadingText";
@@ -20,29 +20,46 @@ import PickLocation from "../../components/PickLocation/PickLocation";
 import validate from "../../utility/validation";
 
 class SharePlace extends Component {
-  state = {
-    controls: {
-      placeName: {
-        value: "",
-        valid: false,
-        touched: false,
-        validationRules: {
-          notEmpty: true
-        }
-      },
-      location: {
-        value: null,
-        valid: false
-      },
-      image: {
-        value: null,
-        valid: false
-      }
-    }
-  };
   constructor(props) {
     super(props);
     Navigation.events().bindComponent(this);
+  }
+  componentWillMount() {
+    this.reset();
+  }
+
+  reset = () => {
+    this.setState({
+      controls: {
+        placeName: {
+          value: "",
+          valid: false,
+          touched: false,
+          validationRules: {
+            notEmpty: true
+          }
+        },
+        location: {
+          value: null,
+          valid: false
+        },
+        image: {
+          value: null,
+          valid: false
+        }
+      }
+    });
+  };
+  componentDidUpdate() {
+    console.log(this.props.placeAdded);
+    if (this.props.placeAdded) {
+      Navigation.mergeOptions(this.props.componentId, {
+        bottomTabs: {
+          currentTabIndex: 0
+        }
+      });
+      this.props.onStartAddedPlace();
+    }
   }
   placeNameInputHandler = val => {
     this.setState(prevState => {
@@ -75,6 +92,10 @@ class SharePlace extends Component {
       this.state.controls.location.value,
       this.state.controls.image.value
     );
+
+    this.reset();
+    this.imagePicker.reset();
+    this.locationPicker.reset();
   };
   locationPickHandler = location => {
     this.setState(prevState => {
@@ -114,7 +135,7 @@ class SharePlace extends Component {
         }
       />
     );
-    if (!this.props.isLoading) {
+    if (this.props.isLoading) {
       submitButton = <ActivityIndicator />;
     }
     return (
@@ -123,14 +144,27 @@ class SharePlace extends Component {
           <MainText>
             <HeadingText>Share a Place with us!</HeadingText>
           </MainText>
-          <PickImage onImagePicked={this.imagePickedHandler} />
-          <PickLocation onLocationPicked={this.locationPickHandler} />
+          <View style={styles.previewImage}>
+            <PickImage
+              onImagePicked={this.imagePickedHandler}
+              ref={ref => (this.imagePicker = ref)}
+            />
+          </View>
 
-          <PlaceInput
-            placeData={this.state.controls.placeName}
-            onChangeText={this.placeNameInputHandler}
-          />
-          <View style={styles.button} />
+          <View style={styles.pickMap}>
+            <PickLocation
+              onLocationPicked={this.locationPickHandler}
+              ref={ref => (this.locationPicker = ref)}
+            />
+          </View>
+
+          <View style={styles.placeInputText}>
+            <PlaceInput
+              placeData={this.state.controls.placeName}
+              onChangeText={this.placeNameInputHandler}
+            />
+          </View>
+
           {submitButton}
         </View>
       </ScrollView>
@@ -154,22 +188,44 @@ const styles = StyleSheet.create({
     margin: 8
   },
   previewImage: {
-    width: "100%",
-    height: "100%"
+    flex: 1,
+    alignItems: "center",
+    width: "90%",
+    height: "90%",
+    marginLeft: 10,
+    marginRight: 10
+  },
+  pickMap: {
+    flex: 1,
+    alignItems: "center",
+    width: "90%",
+    height: "90%",
+    marginLeft: 10,
+    marginRight: 10
+  },
+  placeInputText: {
+    flex: 1,
+    alignItems: "center",
+    width: "90%",
+    height: "90%",
+    marginLeft: 10,
+    marginRight: 10
   }
 });
 const mapStateToProps = state => {
   return {
-    isLoading: state.ui.isLoading
+    isLoading: state.ui.isLoading,
+    placeAdded: state.places.placeAdded
   };
 };
 const mapDispatchToProps = dispatch => {
   return {
     onAddPlace: (placeName, location, image) =>
-      dispatch(addPlace(placeName, location, image))
+      dispatch(addPlace(placeName, location, image)),
+    onStartAddedPlace: () => dispatch(startAddPlace())
   };
 };
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(SharePlace);

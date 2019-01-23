@@ -24,6 +24,9 @@ class FindPlaces extends Component {
   componentDidMount() {
     this.props.onLoadPlaces();
   }
+  componentDidAppear() {
+    this.props.onLoadPlaces();
+  }
   placesSearchHandler = () => {
     this.setState({});
   };

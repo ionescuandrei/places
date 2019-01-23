@@ -37,7 +37,7 @@ export const tryAuth = (authData, authMode) => {
         if (!resParsed.idToken) {
           alert("Authentication faild, please try again!");
         } else {
-          dispatch(authStoreToken(resParsed.idToken));
+          dispatch(authStoreToken(resParsed.idToken, resParsed.expiresIn));
           startMainTab();
         }
       });
@@ -49,10 +49,14 @@ export const authSetToken = token => {
     token: token
   };
 };
-export const authStoreToken = token => {
+export const authStoreToken = (token, expiresIn) => {
   return dispatch => {
     dispatch(authSetToken());
+    const now = new Date();
+    const expiryDate = now.getTime() + expiresIn * 1000;
+    console.log(now, new Date(expiryDate));
     AsyncStorage.setItem("place:auth:token", token);
+    AsyncStorage.setItem("place:auth:expiryDate", expiryDate.toString());
   };
 };
 export const authGetToken = () => {
@@ -60,20 +64,33 @@ export const authGetToken = () => {
     const promise = new Promise((resolve, reject) => {
       const token = getState().auth.token;
       if (!token) {
+        let fetchedToken;
         AsyncStorage.getItem("place:auth:token")
           .catch(err => reject())
           .then(tokenFromStorage => {
+            fetchedToken = tokenFromStorage;
             if (!tokenFromStorage) {
               reject();
               return;
             }
             dispatch(authSetToken(tokenFromStorage));
             resolve(tokenFromStorage);
+          })
+          .then(expiryDate => {
+            const parsedExpiryDate = new Date(parseInt(expiryDate));
+            const now = new Date();
+            if (parsedExpiryDate > now) {
+              dispatch(authSetToken(fetchedToken));
+              resolve(fetchedToken);
+            } else {
+              reject();
+            }
           });
       } else {
         resolve(token);
       }
     });
+    promise.catch(err => dispatch(authClearStorage()));
     return promise;
   };
 };
@@ -83,4 +100,8 @@ export const authAutoSignIn = () => {
       .then(token => startMainTab())
       .catch(err => console.log(err));
   };
+};
+export const authClearStorage = () => {
+  AsyncStorage.removeItem("place:auth:token");
+  AsyncStorage.removeItem("place:auth:expiryDate");
 };
