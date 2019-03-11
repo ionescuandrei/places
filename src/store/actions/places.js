@@ -95,6 +95,7 @@ export const getPlace = () => {
             key: key
           });
         }
+        console.log(places);
         dispatch(setPlaces(places));
       })
       .catch(err => {
@@ -138,7 +139,6 @@ export const deletePlace = key => {
       });
   };
 };
-
 export const removePlace = key => {
   return {
     type: REMOVE_PLACE,

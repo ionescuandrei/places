@@ -27,9 +27,7 @@ class FindPlaces extends Component {
   componentDidAppear() {
     this.props.onLoadPlaces();
   }
-  placesSearchHandler = () => {
-    this.setState({});
-  };
+
   navigationButtonPressed({ buttonTwo }) {
     Navigation.mergeOptions("Drawer", {
       sideMenu: {
@@ -142,16 +140,17 @@ const styles = StyleSheet.create({
     fontSize: 26
   }
 });
-const mapDispatchToProps = dispatch => {
-  return {
-    onLoadPlaces: () => dispatch(getPlace())
-  };
-};
 const mapStateToProps = state => {
   return {
     places: state.places.places
   };
 };
+const mapDispatchToProps = dispatch => {
+  return {
+    onLoadPlaces: () => dispatch(getPlace())
+  };
+};
+
 export default connect(
   mapStateToProps,
   mapDispatchToProps
