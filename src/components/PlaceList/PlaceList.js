@@ -1,12 +1,13 @@
 import React, { Component } from "react";
-import { StyleSheet, FlatList } from "react-native";
+import { StyleSheet, FlatList, View, Text } from "react-native";
 import ListItem from "../ListItem/ListItem";
 import { SearchBar } from "react-native-elements";
+import PickedType from "../PickedType/PickedType";
 
 export default class placeList extends Component {
   constructor(props) {
     super(props);
-    this.state = { data: this.props.places };
+    this.state = { data: this.props.places, typeValue: "italian" };
   }
   searchFilterFunction = text => {
     this.setState({
@@ -24,16 +25,42 @@ export default class placeList extends Component {
     });
     console.log("thius", this.props.places);
   };
+  searchFilterFunctionType = val => {
+    console.log("thius", val);
+    const newData = this.props.places.filter(item => {
+      const itemData = `${item.type.toLowerCase()}`;
+      const textData = val.toLowerCase();
+      console.log("thius", item);
+      return itemData.indexOf(textData) > -1;
+    });
+    this.setState({
+      data: newData
+    });
+    if (val == "mixt") {
+      this.setState({
+        data: this.props.places
+      });
+    }
+  };
   renderHeader = () => {
     return (
-      <SearchBar
-        placeholder="Type Here..."
-        lightTheme
-        round
-        onChangeText={text => this.searchFilterFunction(text)}
-        autoCorrect={false}
-        value={this.state.value}
-      />
+      <View>
+        <View>
+          <Text style={styles.textName}>Name</Text>
+          <SearchBar
+            placeholder="Type Here..."
+            lightTheme
+            round
+            onChangeText={text => this.searchFilterFunction(text)}
+            autoCorrect={false}
+            value={this.state.value}
+          />
+        </View>
+        <View>
+          <Text style={styles.textName}>Type</Text>
+          <PickedType onTypePickedProp={this.searchFilterFunctionType} />
+        </View>
+      </View>
     );
   };
   render() {
@@ -57,5 +84,11 @@ export default class placeList extends Component {
 const styles = StyleSheet.create({
   listContainer: {
     width: "100%"
+  },
+  textName: {
+    fontSize: 24,
+    paddingTop: 15,
+    paddingBottom: 15,
+    color: "red"
   }
 });

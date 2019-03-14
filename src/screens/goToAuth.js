@@ -17,7 +17,7 @@ export const goToAuth = () =>
         options: {
           topBar: {
             title: {
-              text: "Welcome screen"
+              text: "Find my restaurant"
             }
           }
         }

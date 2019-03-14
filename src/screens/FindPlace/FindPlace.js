@@ -107,6 +107,7 @@ class FindPlaces extends Component {
             opacity: this.state.placesAnim
           }}
         >
+          <Text style={styles.textHeader}>Search Restaurants by:</Text>
           <PlaceList
             places={this.props.places}
             onItemSelected={this.itemSelectedHandler}
@@ -138,6 +139,11 @@ const styles = StyleSheet.create({
     color: "orange",
     fontWeight: "bold",
     fontSize: 26
+  },
+  textHeader: {
+    fontSize: 30,
+    color: "blue",
+    textAlign: "center"
   }
 });
 const mapStateToProps = state => {
