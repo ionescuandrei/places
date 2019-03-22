@@ -18,6 +18,7 @@ import PlaceInput from "../../components/PlaceInput/PlaceInput";
 import PickImage from "../../components/PickImage/PickImage";
 import PickLocation from "../../components/PickLocation/PickLocation";
 import validate from "../../utility/validation";
+import PickedType from "../../components/PickedType/PickedType";
 
 class SharePlace extends Component {
   constructor(props) {
@@ -44,6 +45,10 @@ class SharePlace extends Component {
           valid: false
         },
         image: {
+          value: null,
+          valid: false
+        },
+        type: {
           value: null,
           valid: false
         }
@@ -76,6 +81,19 @@ class SharePlace extends Component {
       };
     });
   };
+  pickedTypeHandler = val => {
+    this.setState(prevState => {
+      return {
+        controls: {
+          ...prevState.controls,
+          type: {
+            value: val,
+            valid: true
+          }
+        }
+      };
+    });
+  };
 
   navigationButtonPressed({ buttonTwo }) {
     Navigation.mergeOptions("Drawer", {
@@ -90,7 +108,8 @@ class SharePlace extends Component {
     this.props.onAddPlace(
       this.state.controls.placeName.value,
       this.state.controls.location.value,
-      this.state.controls.image.value
+      this.state.controls.image.value,
+      this.state.controls.type.value
     );
 
     this.reset();
@@ -142,7 +161,7 @@ class SharePlace extends Component {
       <ScrollView>
         <View style={styles.container}>
           <MainText>
-            <HeadingText>Share a Place with us!</HeadingText>
+            <HeadingText>Share a Restaurant with us!</HeadingText>
           </MainText>
           <View style={styles.previewImage}>
             <PickImage
@@ -164,7 +183,7 @@ class SharePlace extends Component {
               onChangeText={this.placeNameInputHandler}
             />
           </View>
-
+          <PickedType onTypePickedProp={this.pickedTypeHandler} />
           {submitButton}
         </View>
       </ScrollView>
@@ -220,8 +239,8 @@ const mapStateToProps = state => {
 };
 const mapDispatchToProps = dispatch => {
   return {
-    onAddPlace: (placeName, location, image) =>
-      dispatch(addPlace(placeName, location, image)),
+    onAddPlace: (placeName, location, image, type) =>
+      dispatch(addPlace(placeName, location, image, type)),
     onStartAddedPlace: () => dispatch(startAddPlace())
   };
 };

@@ -1,1 +1,3 @@
-import App from './App';
+import App, { goToAuth } from "./App";
+
+goToAuth();

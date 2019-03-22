@@ -4,7 +4,8 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
-  Animated
+  Animated,
+  ScrollView
 } from "react-native";
 import { connect } from "react-redux";
 import { Navigation } from "react-native-navigation";
@@ -27,9 +28,7 @@ class FindPlaces extends Component {
   componentDidAppear() {
     this.props.onLoadPlaces();
   }
-  placesSearchHandler = () => {
-    this.setState({});
-  };
+
   navigationButtonPressed({ buttonTwo }) {
     Navigation.mergeOptions("Drawer", {
       sideMenu: {
@@ -109,10 +108,14 @@ class FindPlaces extends Component {
             opacity: this.state.placesAnim
           }}
         >
-          <PlaceList
-            places={this.props.places}
-            onItemSelected={this.itemSelectedHandler}
-          />
+          <ScrollView>
+            <Text style={styles.textHeader}>Search Restaurants by:</Text>
+
+            <PlaceList
+              places={this.props.places}
+              onItemSelected={this.itemSelectedHandler}
+            />
+          </ScrollView>
         </Animated.View>
       );
     }
@@ -140,18 +143,24 @@ const styles = StyleSheet.create({
     color: "orange",
     fontWeight: "bold",
     fontSize: 26
+  },
+  textHeader: {
+    fontSize: 30,
+    color: "blue",
+    textAlign: "center"
   }
 });
-const mapDispatchToProps = dispatch => {
-  return {
-    onLoadPlaces: () => dispatch(getPlace())
-  };
-};
 const mapStateToProps = state => {
   return {
     places: state.places.places
   };
 };
+const mapDispatchToProps = dispatch => {
+  return {
+    onLoadPlaces: () => dispatch(getPlace())
+  };
+};
+
 export default connect(
   mapStateToProps,
   mapDispatchToProps
