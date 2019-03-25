@@ -3,7 +3,10 @@ import { StyleSheet, FlatList, View, Text } from "react-native";
 import ListItem from "../ListItem/ListItem";
 import { SearchBar } from "react-native-elements";
 import PickedType from "../PickedType/PickedType";
+<<<<<<< HEAD
 import NearLocation from "../NearLocations/NearLocations";
+=======
+>>>>>>> 46d2e614fb4536d2f16e01f2589f2167d6d3d0b6
 
 export default class placeList extends Component {
   constructor(props) {
@@ -24,6 +27,7 @@ export default class placeList extends Component {
     this.setState({
       data: newData
     });
+<<<<<<< HEAD
   };
   getPlacesByLocation = loc => {
     const newData = this.props.places.filter(place => {
@@ -39,6 +43,15 @@ export default class placeList extends Component {
     const newData = this.props.places.filter(item => {
       const itemData = `${item.type}`;
       const textData = val;
+=======
+    console.log("thius", this.props.places);
+  };
+  searchFilterFunctionType = val => {
+    console.log("thius", val);
+    const newData = this.props.places.filter(item => {
+      const itemData = `${item.type.toLowerCase()}`;
+      const textData = val.toLowerCase();
+>>>>>>> 46d2e614fb4536d2f16e01f2589f2167d6d3d0b6
       console.log("thius", item);
       return itemData.indexOf(textData) > -1;
     });
@@ -55,11 +68,14 @@ export default class placeList extends Component {
     return (
       <View>
         <View>
+<<<<<<< HEAD
           <Text style={styles.textName}>Location</Text>
           <NearLocation
             places={this.props.places}
             onGetLocation={this.getPlacesByLocation}
           />
+=======
+>>>>>>> 46d2e614fb4536d2f16e01f2589f2167d6d3d0b6
           <Text style={styles.textName}>Name</Text>
           <SearchBar
             placeholder="Type Here..."
