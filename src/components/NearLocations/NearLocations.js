@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { View, Text, StyleSheet, Button, Dimensions } from "react-native";
-import { connect } from "react-redux";
 import MapView from "react-native-maps";
 
 export default class NearLocations extends Component {
@@ -17,12 +16,14 @@ export default class NearLocations extends Component {
     locationChosen: false
   };
   getWithinDistance = () => {
+    let latlng = {};
     var selectedMarker = [];
     var lat1 = this.state.focusedLoction.latitude;
     var lon1 = this.state.focusedLoction.longitude;
-    selectedMarker = this.props.places.map(place => {
-      var lat2 = place.location.latitude;
-      var lon2 = place.location.longitude;
+
+    for (var i = 0; i < this.props.places.length; i++) {
+      var lat2 = this.props.places[i].location.latitude;
+      var lon2 = this.props.places[i].location.longitude;
       var R = 6371;
       var dLat = (lat2 - lat1) * (Math.PI / 180);
       var dLon = (lon2 - lon1) * (Math.PI / 180);
@@ -35,14 +36,15 @@ export default class NearLocations extends Component {
       var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
       var d = R * c;
       if (d <= 2.0) {
-        var latlng = {
+        latlng = {
           latitude: lat2,
           longitude: lon2
         };
+        selectedMarker.push(latlng);
+        this.props.onGetLocation(latlng);
       }
-      this.props.onGetLocation(latlng);
-      return latlng;
-    });
+    }
+
     this.setState({
       selectMarkerArray: selectedMarker
     });
@@ -90,7 +92,12 @@ export default class NearLocations extends Component {
     let marker = null;
     if (this.state.locationChosen) {
       marker = this.state.selectMarkerArray.map(marker => {
-        return <MapView.Marker coordinate={marker} />;
+        return (
+          <MapView.Marker
+            coordinate={marker}
+            title={marker.latitude.toString()}
+          />
+        );
       });
     }
     return (

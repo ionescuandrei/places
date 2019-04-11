@@ -4,12 +4,20 @@ import ListItem from "../ListItem/ListItem";
 import { SearchBar } from "react-native-elements";
 import PickedType from "../PickedType/PickedType";
 import NearLocation from "../NearLocations/NearLocations";
+import geolib from "geolib";
 
 export default class placeList extends Component {
   constructor(props) {
     super(props);
-    this.state = { data: this.props.places, typeValue: "italian" };
+    this.state = {
+      data: this.props.places,
+      typeValue: "italian"
+    };
   }
+  componentWillMount() {
+    this.getDistances();
+  }
+
   searchFilterFunction = text => {
     this.setState({
       value: text
@@ -25,15 +33,29 @@ export default class placeList extends Component {
       data: newData
     });
   };
+
   getPlacesByLocation = loc => {
     const newData = this.props.places.filter(place => {
       const itemData = `${place.location}`;
       return itemData.indexOf(loc) > -1;
     });
+
     console.log("Location", loc);
     this.setState({
       data: newData
     });
+  };
+  getDistances = () => {
+    const newDistances = this.props.places.map(place => {
+      const itemLocation = place.location;
+      const dist = geolib.getDistance(itemLocation, this.props.mylocation);
+      return { ...place, dist };
+    });
+    const sortData = newDistances.sort((a, b) => a.dist - b.dist);
+    this.setState({
+      data: sortData
+    });
+    console.log("Location", sortData);
   };
   searchFilterFunctionType = val => {
     const newData = this.props.places.filter(item => {
@@ -45,6 +67,7 @@ export default class placeList extends Component {
     this.setState({
       data: newData
     });
+
     if (val == "mixt") {
       this.setState({
         data: this.props.places
@@ -80,12 +103,17 @@ export default class placeList extends Component {
   render() {
     return (
       <FlatList
+        // horizontal
+        // pagingEnabled={true}
+        // showsHorizontalScrollIndicator={false}
+        // legacyImplementation={false}
         style={styles.listContainer}
         data={this.state.data}
         renderItem={info => (
           <ListItem
             placeName={info.item.name}
             placeImage={info.item.image}
+            placeDistance={info.item.dist / 1000}
             onItemPressed={() => this.props.onItemSelected(info.item.key)}
           />
         )}
@@ -103,6 +131,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     paddingTop: 15,
     paddingBottom: 15,
+    paddingLeft: 15,
     color: "red"
   }
 });

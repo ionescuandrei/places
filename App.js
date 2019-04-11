@@ -4,6 +4,7 @@ import FindPlaces from "./src/screens/FindPlace/FindPlace";
 import SharePlace from "./src/screens/SharePlace/SharePlace";
 import PlaceDetail from "./src/screens/PlaceDetail/PlaceDetail";
 import SideDrawer from "./src/screens/SideDrawer/SideDrawer";
+import MapSearch from "./src/screens/MapSearch/MapSearch";
 import configureStore from "./src/store/configureStore";
 import { Provider } from "react-redux";
 import { goToAuth } from "./src/screens/goToAuth";
@@ -36,6 +37,12 @@ Navigation.registerComponentWithRedux(
 Navigation.registerComponentWithRedux(
   "places.SideDrawer",
   () => SideDrawer,
+  Provider,
+  store
+);
+Navigation.registerComponentWithRedux(
+  "places.MapSearch",
+  () => MapSearch,
   Provider,
   store
 );

@@ -17,7 +17,10 @@ export const goToAuth = () =>
         options: {
           topBar: {
             title: {
-              text: "Find my restaurant"
+              text: "Welcome to Finder",
+              color: "#039BE5",
+              fontSize: 24,
+              alignment: "center"
             }
           }
         }

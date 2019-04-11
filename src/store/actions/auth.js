@@ -40,7 +40,7 @@ export const tryAuth = (authData, authMode) => {
           dispatch(
             authStoreToken(
               resParsed.idToken,
-              resParsed.expiresIn.re,
+              resParsed.expiresIn,
               resParsed.refreshToken
             )
           );
@@ -59,7 +59,8 @@ export const authSetToken = (token, expiryDate) => {
 export const authStoreToken = (token, expiresIn, refreshToken) => {
   return dispatch => {
     const now = new Date();
-    const expiryDate = now.getTime() + expiresIn * 1000;
+    const expiryDate = now.getTime() + expiresIn * 100000;
+    console.log(expiresIn);
     console.log(now, new Date(expiryDate));
     dispatch(authSetToken(token, expiryDate));
     AsyncStorage.setItem("place:auth:token", token);
@@ -101,6 +102,8 @@ export const authGetToken = () => {
     });
     return promise
       .catch(err => {
+        console.log(err);
+
         return AsyncStorage.getItem("places:auth:refreshToken")
           .then(refreshToken => {
             return fetch(

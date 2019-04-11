@@ -11,7 +11,7 @@ import {
 import DefaultTextInput from "../../UI/defaultTextInput/DefaultTextInput";
 import HeadingText from "../../UI/headingText/HeadingText";
 import MainText from "../../UI/mainText/MainText";
-import imagBackground from "../../assets/background.jpg";
+import imagBackground from "../../assets/dan-gold.jpg";
 import ButtonWithbackground from "../../UI/buttonWithBackground/ButtonWithBackground";
 import validate from "../../utility/validation";
 import { connect } from "react-redux";

@@ -13,10 +13,24 @@ import { getPlace } from "../../store/actions/index";
 
 import PlaceList from "../../components/PlaceList/PlaceList";
 class FindPlaces extends Component {
+  static options(passProps) {
+    return {
+      topBar: {
+        title: {
+          text: "Finder",
+          fontSize: 25,
+          color: "#039BE5",
+          fontFamily: "Helvetica",
+          alignment: "center"
+        }
+      }
+    };
+  }
   state = {
     placesLoaded: false,
     removeAnim: new Animated.Value(1),
-    placesAnim: new Animated.Value(0)
+    placesAnim: new Animated.Value(0),
+    mycoordonate: null
   };
   constructor(props) {
     super(props);
@@ -27,8 +41,40 @@ class FindPlaces extends Component {
   }
   componentDidAppear() {
     this.props.onLoadPlaces();
+    this.getLocationHandler();
   }
-
+  pickLocationHandler = event => {
+    const coords = event.nativeEvent.coordinate;
+    this.setState(prevState => {
+      return {
+        mycoordonate: {
+          ...prevState.mycoordonate,
+          latitude: coords.latitude,
+          longitude: coords.longitude
+        }
+      };
+    });
+    console.log("My curent location is", this.state.mycoordonate.latitude);
+  };
+  getLocationHandler = () => {
+    navigator.geolocation.getCurrentPosition(
+      pos => {
+        const coordsEvent = {
+          nativeEvent: {
+            coordinate: {
+              latitude: pos.coords.latitude,
+              longitude: pos.coords.longitude
+            }
+          }
+        };
+        this.pickLocationHandler(coordsEvent);
+      },
+      err => {
+        console.log(err);
+        alert("Fetching the location faild");
+      }
+    );
+  };
   navigationButtonPressed({ buttonTwo }) {
     Navigation.mergeOptions("Drawer", {
       sideMenu: {
@@ -110,10 +156,10 @@ class FindPlaces extends Component {
         >
           <ScrollView>
             <Text style={styles.textHeader}>Search Restaurants by:</Text>
-
             <PlaceList
               places={this.props.places}
               onItemSelected={this.itemSelectedHandler}
+              mylocation={this.state.mycoordonate}
             />
           </ScrollView>
         </Animated.View>
@@ -146,8 +192,9 @@ const styles = StyleSheet.create({
   },
   textHeader: {
     fontSize: 30,
-    color: "blue",
-    textAlign: "center"
+    color: "#039BE5",
+    textAlign: "center",
+    paddingTop: 15
   }
 });
 const mapStateToProps = state => {
