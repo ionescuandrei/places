@@ -9,8 +9,9 @@ const listItem = props => (
         source={props.placeImage}
         style={styles.placeImage}
       />
-      <Text>{props.placeName}</Text>
-      <Text style={{ textAlign: "right" }}>{props.placeDistance} KM</Text>
+      <Text>
+        {props.placeName}-{props.placeDistance} KM
+      </Text>
     </View>
   </TouchableOpacity>
 );
@@ -18,19 +19,23 @@ const listItem = props => (
 const styles = StyleSheet.create({
   listItem: {
     width: "100%",
-    height: 70,
+    height: "100%",
     marginBottom: 5,
     padding: 10,
     backgroundColor: "#eee",
-    flexDirection: "row",
-    alignItems: "center"
+    position: "relative"
   },
   placeImage: {
     marginRight: 8,
-    height: 50,
-    width: 50
+    height: 150,
+    width: 150
   },
-  textStyle: {}
+  textTipe: {
+    color: "black",
+    fontSize: 14,
+    fontFamily: "Times New Roman",
+    position: "absolute"
+  }
 });
 
 export default listItem;

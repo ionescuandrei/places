@@ -1,13 +1,13 @@
 import React, { Component } from "react";
 import { StyleSheet, FlatList, View, Text } from "react-native";
-import ListItem from "../ListItem/ListItem";
+
 import HorizontalListItem from "../HorizontalListItem/HorizontalListItem";
-import { SearchBar } from "react-native-elements";
+
 import PickedType from "../PickedType/PickedType";
 import NearLocation from "../NearLocations/NearLocations";
 import geolib from "geolib";
 
-export default class placeList extends Component {
+export default class ListType extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -18,22 +18,6 @@ export default class placeList extends Component {
   componentWillMount() {
     this.getDistances();
   }
-
-  searchFilterFunction = text => {
-    this.setState({
-      value: text
-    });
-
-    const newData = this.props.places.filter(item => {
-      const itemData = `${item.name.toUpperCase()}`;
-      const textData = text.toUpperCase();
-
-      return itemData.indexOf(textData) > -1;
-    });
-    this.setState({
-      data: newData
-    });
-  };
 
   getDistances = () => {
     const newDistances = this.props.places.map(place => {
@@ -47,31 +31,41 @@ export default class placeList extends Component {
     });
     console.log("Location", sortData);
   };
+  searchFilterFunctionType = val => {
+    const newData = this.props.places.filter(item => {
+      const itemData = `${item.type}`;
+      const textData = val;
+      console.log("thius", item);
+      return itemData.indexOf(textData) > -1;
+    });
+    this.setState({
+      data: newData
+    });
+
+    if (val == "mixt") {
+      this.setState({
+        data: this.props.places
+      });
+    }
+  };
 
   render() {
     return (
-      <View style={styles.containerHeader}>
-        <View>
-          <SearchBar
-            placeholder="Type Here..."
-            lightTheme
-            round
-            onChangeText={text => this.searchFilterFunction(text)}
-            autoCorrect={false}
-            value={this.state.value}
-          />
+      <View>
+        <View style={styles.containerHeader}>
+          <View>
+            <Text style={styles.textName}>Type</Text>
+            <PickedType onTypePickedProp={this.searchFilterFunctionType} />
+          </View>
         </View>
         <FlatList
-          horizontal
-          pagingEnabled={true}
-          showsHorizontalScrollIndicator={false}
-          legacyImplementation={false}
           style={styles.listContainer}
           data={this.state.data}
           renderItem={info => (
-            <ListItem
+            <HorizontalListItem
               placeName={info.item.name}
               placeImage={info.item.image}
+              placeType={info.item.type}
               placeDistance={info.item.dist / 1000}
               onItemPressed={() => this.props.onItemSelected(info.item.key)}
             />

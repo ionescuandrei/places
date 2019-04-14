@@ -10,14 +10,14 @@ import {
 import { connect } from "react-redux";
 import { Navigation } from "react-native-navigation";
 import { getPlace } from "../../store/actions/index";
-
+import ListType from "../../components/ListType/Listtype";
 import PlaceList from "../../components/PlaceList/PlaceList";
 class FindPlaces extends Component {
   static options(passProps) {
     return {
       topBar: {
         title: {
-          text: "Finder",
+          text: "Search by",
           fontSize: 25,
           color: "#039BE5",
           fontFamily: "Helvetica",
@@ -26,6 +26,7 @@ class FindPlaces extends Component {
       }
     };
   }
+
   state = {
     placesLoaded: false,
     removeAnim: new Animated.Value(1),
@@ -155,8 +156,12 @@ class FindPlaces extends Component {
           }}
         >
           <ScrollView>
-            <Text style={styles.textHeader}>Search Restaurants by:</Text>
             <PlaceList
+              places={this.props.places}
+              onItemSelected={this.itemSelectedHandler}
+              mylocation={this.state.mycoordonate}
+            />
+            <ListType
               places={this.props.places}
               onItemSelected={this.itemSelectedHandler}
               mylocation={this.state.mycoordonate}
