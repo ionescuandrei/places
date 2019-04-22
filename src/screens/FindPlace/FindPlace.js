@@ -94,7 +94,8 @@ class FindPlaces extends Component {
         name: "places.PlaceDetail",
         passProps: {
           text: "Pushed screen",
-          selectedPlace: selPlace
+          selectedPlace: selPlace,
+          mylocation: this.state.mycoordonate
         },
         options: {
           topBar: {

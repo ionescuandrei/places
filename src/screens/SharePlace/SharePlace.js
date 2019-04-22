@@ -19,6 +19,7 @@ import PickImage from "../../components/PickImage/PickImage";
 import PickLocation from "../../components/PickLocation/PickLocation";
 import validate from "../../utility/validation";
 import PickedType from "../../components/PickedType/PickedType";
+import DefaultInput from "../../UI/defaultTextInput/DefaultTextInput";
 
 class SharePlace extends Component {
   constructor(props) {
@@ -51,6 +52,10 @@ class SharePlace extends Component {
         type: {
           value: null,
           valid: false
+        },
+        adress: {
+          value: "",
+          valid: false
         }
       }
     });
@@ -76,6 +81,19 @@ class SharePlace extends Component {
             value: val,
             valid: validate(val, prevState.controls.placeName.validationRules),
             touched: true
+          }
+        }
+      };
+    });
+  };
+  placeAdressHandler = val => {
+    this.setState(prevState => {
+      return {
+        controls: {
+          ...prevState.controls,
+          adress: {
+            ...prevState.controls.adress,
+            value: val
           }
         }
       };
@@ -109,7 +127,8 @@ class SharePlace extends Component {
       this.state.controls.placeName.value,
       this.state.controls.location.value,
       this.state.controls.image.value,
-      this.state.controls.type.value
+      this.state.controls.type.value,
+      this.state.controls.adress.value
     );
 
     this.reset();
@@ -183,6 +202,12 @@ class SharePlace extends Component {
               onChangeText={this.placeNameInputHandler}
             />
           </View>
+          <View style={styles.placeInputText}>
+            <DefaultInput
+              onChangeText={this.placeAdressHandler}
+              placeholder="Adress"
+            />
+          </View>
           <PickedType onTypePickedProp={this.pickedTypeHandler} />
           {submitButton}
         </View>
@@ -239,8 +264,8 @@ const mapStateToProps = state => {
 };
 const mapDispatchToProps = dispatch => {
   return {
-    onAddPlace: (placeName, location, image, type) =>
-      dispatch(addPlace(placeName, location, image, type)),
+    onAddPlace: (placeName, location, image, type, adress) =>
+      dispatch(addPlace(placeName, location, image, type, adress)),
     onStartAddedPlace: () => dispatch(startAddPlace())
   };
 };

@@ -13,6 +13,7 @@ import { connect } from "react-redux";
 import { Navigation } from "react-native-navigation";
 import Icon from "react-native-vector-icons/Ionicons";
 import { deletePlace } from "../../store/actions/index";
+import GetDirections from "../../components/Direction/getDirections";
 import MapView from "react-native-maps";
 
 class PlaceDetail extends Component {
@@ -79,6 +80,10 @@ class PlaceDetail extends Component {
             </Text>
           </View>
           <View>
+            <GetDirections
+              mylocation={this.props.mylocation}
+              location={this.props.selectedPlace.location}
+            />
             <TouchableOpacity onPress={this.placeDeletedHandler}>
               <View style={styles.deleteButton}>
                 <Icon
