@@ -4,14 +4,8 @@ import ListItem from "../ListItem/ListItem";
 import HorizontalListItem from "../HorizontalListItem/HorizontalListItem";
 import { SearchBar } from "react-native-elements";
 import PickedType from "../PickedType/PickedType";
-<<<<<<< HEAD
 import NearLocation from "../NearLocations/NearLocations";
-<<<<<<< HEAD
 import geolib from "geolib";
-=======
-=======
->>>>>>> 46d2e614fb4536d2f16e01f2589f2167d6d3d0b6
->>>>>>> 38a7d52b963a0cd776894c9b96646ee522e72ef2
 
 export default class placeList extends Component {
   constructor(props) {
@@ -39,42 +33,15 @@ export default class placeList extends Component {
     this.setState({
       data: newData
     });
-<<<<<<< HEAD
   };
-<<<<<<< HEAD
 
   getDistances = () => {
     const newDistances = this.props.places.map(place => {
       const itemLocation = place.location;
       const dist = geolib.getDistance(itemLocation, this.props.mylocation);
       return { ...place, dist };
-=======
-  getPlacesByLocation = loc => {
-    const newData = this.props.places.filter(place => {
-      const itemData = `${place.location}`;
-      return itemData.indexOf(loc) > -1;
-    });
-    console.log("Location", loc);
-    this.setState({
-      data: newData
-    });
-  };
-  searchFilterFunctionType = val => {
-    const newData = this.props.places.filter(item => {
-      const itemData = `${item.type}`;
-      const textData = val;
-=======
-    console.log("thius", this.props.places);
-  };
-  searchFilterFunctionType = val => {
-    console.log("thius", val);
-    const newData = this.props.places.filter(item => {
-      const itemData = `${item.type.toLowerCase()}`;
-      const textData = val.toLowerCase();
->>>>>>> 46d2e614fb4536d2f16e01f2589f2167d6d3d0b6
       console.log("thius", item);
       return itemData.indexOf(textData) > -1;
->>>>>>> 38a7d52b963a0cd776894c9b96646ee522e72ef2
     });
     const sortData = newDistances.sort((a, b) => a.dist - b.dist);
     this.setState({
@@ -87,18 +54,8 @@ export default class placeList extends Component {
     return (
       <View style={styles.containerHeader}>
         <View>
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-          <Text style={styles.textName}>Location</Text>
-          <NearLocation
-            places={this.props.places}
-            onGetLocation={this.getPlacesByLocation}
-          />
-=======
->>>>>>> 46d2e614fb4536d2f16e01f2589f2167d6d3d0b6
           <Text style={styles.textName}>Name</Text>
->>>>>>> 38a7d52b963a0cd776894c9b96646ee522e72ef2
+
           <SearchBar
             placeholder="Type Here..."
             lightTheme

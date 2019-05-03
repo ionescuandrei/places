@@ -44,7 +44,7 @@ export default class AvatarPickPhoto extends Component {
           <Button title="Edit Photo" onPress={this.pickImageHandler} />
         </View>
 
-        <View style={styles.body}>
+        {/* <View style={styles.body}>
           <View style={styles.bodyContent}>
             <Text style={styles.name}>{this.props.nume}</Text>
             <Text style={styles.info}>UX Designer / Mobile developer</Text>
@@ -60,7 +60,7 @@ export default class AvatarPickPhoto extends Component {
               <Text>Opcion 2</Text>
             </TouchableOpacity>
           </View>
-        </View>
+        </View> */}
       </View>
     );
   }

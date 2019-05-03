@@ -3,15 +3,18 @@ import ImagePicker from "react-native-image-picker";
 import { connect } from "react-redux";
 import {
   View,
+  TextInput,
   Text,
   StyleSheet,
   Dimensions,
   Image,
   TouchableOpacity
 } from "react-native";
-import Icon from "react-native-vector-icons/Ionicons";
+
 import AvatarPickPhoto from "../../components/AvatarPickPhoto/AvatarPickPhoto";
-import { Button } from "react-native-elements";
+import Icon from "react-native-vector-icons/FontAwesome";
+import { Input } from "react-native-elements";
+
 class EditProfile extends Component {
   state = {
     name: "",
@@ -29,12 +32,17 @@ class EditProfile extends Component {
   };
   render() {
     return (
-      <AvatarPickPhoto
-        onImagePicked={this.photoPickedHandler}
-        ref={ref => (this.pickedImage = ref)}
-        nume={this.props.name}
-        photo={this.state.photo}
-      />
+      <View style={styles.container}>
+        <AvatarPickPhoto
+          onImagePicked={this.photoPickedHandler}
+          ref={ref => (this.pickedImage = ref)}
+          nume={this.props.name}
+          photo={this.state.photo}
+        />
+        <View>
+          <Input placeholder="INPUT WITH ICON" />
+        </View>
+      </View>
     );
   }
 }
@@ -53,6 +61,10 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     position: "absolute",
     marginTop: 90
+  },
+  textInput: {
+    height: 40,
+    paddingLeft: 6
   },
   name: {
     fontSize: 22,
