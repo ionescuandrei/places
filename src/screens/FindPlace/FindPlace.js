@@ -156,6 +156,7 @@ class FindPlaces extends Component {
             opacity: this.state.placesAnim
           }}
         >
+<<<<<<< HEAD
           <ScrollView>
             <PlaceList
               places={this.props.places}
@@ -168,6 +169,13 @@ class FindPlaces extends Component {
               mylocation={this.state.mycoordonate}
             />
           </ScrollView>
+=======
+          <Text style={styles.textHeader}>Search Restaurants by:</Text>
+          <PlaceList
+            places={this.props.places}
+            onItemSelected={this.itemSelectedHandler}
+          />
+>>>>>>> 46d2e614fb4536d2f16e01f2589f2167d6d3d0b6
         </Animated.View>
       );
     }
