@@ -80,6 +80,10 @@ class PlaceDetail extends Component {
             </Text>
           </View>
           <View>
+            <Text>Adress</Text>
+            <Text>{this.props.selectedPlace.adress}</Text>
+          </View>
+          <View>
             <GetDirections
               mylocation={this.props.mylocation}
               location={this.props.selectedPlace.location}

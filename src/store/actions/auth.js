@@ -7,6 +7,7 @@ const apiKey = "AIzaSyCObW-CUni5ICoxpot3NXr3UXzjr6L5vQ8";
 export const tryAuth = (authData, authMode) => {
   return dispatch => {
     dispatch(uiStartLoading());
+    dispatch(getName(authData.name));
     let url =
       "https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=" +
       apiKey;
@@ -29,6 +30,7 @@ export const tryAuth = (authData, authMode) => {
       .catch(err => {
         console.log(err);
         alert("Authentication faild, please try again!");
+        console.log(authData);
         dispatch(uiStopLoading());
       })
       .then(res => res.json())
@@ -47,6 +49,12 @@ export const tryAuth = (authData, authMode) => {
           startMainTab();
         }
       });
+  };
+};
+export const getName = name => {
+  return {
+    type: TRY_AUTH,
+    name: name
   };
 };
 export const authSetToken = (token, expiryDate) => {
@@ -83,8 +91,9 @@ export const authGetToken = () => {
               reject();
               return;
             }
-            dispatch(authSetToken(tokenFromStorage));
-            resolve(tokenFromStorage);
+            return AsyncStorage.getItem("place:auth:expiryDate");
+            // dispatch(authSetToken(tokenFromStorage));
+            // resolve(tokenFromStorage);
           })
           .then(expiryDate => {
             const parsedExpiryDate = new Date(parseInt(expiryDate));
@@ -95,16 +104,15 @@ export const authGetToken = () => {
             } else {
               reject();
             }
-          });
+          })
+          .catch(err => reject());
       } else {
         resolve(token);
       }
     });
     return promise
       .catch(err => {
-        console.log(err);
-
-        return AsyncStorage.getItem("places:auth:refreshToken")
+        return AsyncStorage.getItem("place:auth:refreshToken")
           .then(refreshToken => {
             return fetch(
               "https://securetoken.googleapis.com/v1/token?key=" + apiKey,

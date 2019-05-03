@@ -81,14 +81,14 @@ const startTab = () => {
                       children: [
                         {
                           component: {
-                            name: "places.SharePlace",
-                            id: "shareScreen",
+                            name: "places.EditProfile",
+                            id: "editProfile",
                             passProps: {
                               text: "This is tab 2"
                             },
                             options: {
                               bottomTab: {
-                                text: "Share",
+                                text: "Profile",
                                 icon: shareTab,
                                 testID: "SECOND_TAB_BAR_BUTTON",
                                 iconColor: "red",

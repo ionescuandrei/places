@@ -23,7 +23,7 @@ exports.storeImage = functions.https.onRequest((request, response) => {
       !request.headers.authorization.startsWith("Bearer ")
     ) {
       console.log("no token present");
-      response.status(403).jason({ error: "Unauthorized" });
+      response.status(403).json({ error: "Unauthorized" });
       return;
     }
     let idToken;

@@ -22,6 +22,9 @@ class AuthScreen extends React.Component {
     viewMode: Dimensions.get("window").height > 500 ? "portrait" : "landscape",
     authMode: "login",
     controls: {
+      name: {
+        value: ""
+      },
       email: {
         value: "",
         valid: false,
@@ -72,10 +75,24 @@ class AuthScreen extends React.Component {
   };
   authHandler = () => {
     const authData = {
+      name: this.state.controls.name.value,
       email: this.state.controls.email.value,
       password: this.state.controls.password.value
     };
     this.props.onTryAuth(authData, this.state.authMode);
+  };
+  nameHandler = val => {
+    this.setState(prevState => {
+      return {
+        controls: {
+          ...prevState.controls,
+          name: {
+            ...prevState.controls.name,
+            value: val
+          }
+        }
+      };
+    });
   };
   updateInputState = (key, value) => {
     let connectedValue = {};
@@ -125,6 +142,7 @@ class AuthScreen extends React.Component {
   render() {
     let headingText = null;
     let confirmPass = null;
+    let name = null;
     let submitButton = (
       <ButtonWithbackground
         color="#29aaf4"
@@ -147,6 +165,14 @@ class AuthScreen extends React.Component {
       );
     }
     if (this.state.authMode === "signup") {
+      name = (
+        <DefaultTextInput
+          placeholder="Your name"
+          style={styles.inputText}
+          value={this.state.controls.name.value}
+          onChangeText={this.nameHandler}
+        />
+      );
       confirmPass = (
         <DefaultTextInput
           placeholder="Confirm password"
@@ -174,6 +200,7 @@ class AuthScreen extends React.Component {
           </ButtonWithbackground>
           {/* <Button title="Switch to login"/> */}
           <View style={styles.inputContainer}>
+            {name}
             <DefaultTextInput
               placeholder="Your e-mail adress"
               style={styles.inputText}
@@ -261,6 +288,7 @@ const styles = StyleSheet.create({
   }
 });
 const mapStateToProps = state => {
+  console.log(state);
   return {
     isLoading: state.ui.isLoading
   };
