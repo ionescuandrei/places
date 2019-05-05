@@ -6,6 +6,7 @@ import {
 
 const initialState = {
   name: "John Doe",
+  email: "",
   token: null,
   expiryDate: null
 };
@@ -27,7 +28,8 @@ const reducer = (state = initialState, action) => {
     case TRY_AUTH:
       return {
         ...state,
-        name: action.name
+        name: action.name,
+        email: action.email
       };
     default:
       return state;

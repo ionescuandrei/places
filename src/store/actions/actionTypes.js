@@ -8,3 +8,5 @@ export const UI_START_LOADING = "UI_START_LOADING";
 export const UI_STOP_LOADING = "UI_STOP_LOADING";
 export const SET_AUTH_TOKEN = "SET_AUTH_TOKEN";
 export const AUTH_REMOVE_TOKEN = "AUTH_REMOVE_TOKEN";
+export const ADD_USER = "ADD_USER";
+export const GET_USER = "GET_USER";

@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import ImagePicker from "react-native-image-picker";
 import { connect } from "react-redux";
 import {
   View,
@@ -10,7 +9,7 @@ import {
   Image,
   TouchableOpacity
 } from "react-native";
-
+import { addUserProfile } from "../../store/actions/users";
 import AvatarPickPhoto from "../../components/AvatarPickPhoto/AvatarPickPhoto";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { Input } from "react-native-elements";
@@ -19,17 +18,33 @@ class EditProfile extends Component {
   state = {
     name: "",
     photo: { uri: "https://bootdey.com/img/Content/avatar/avatar6.png" },
-    telefone: "",
+    phone: "",
+    location: "",
     description: "",
     reviews: "",
     email: ""
   };
 
+  componentDidMount() {
+    this.setState({
+      name: this.props.name
+    });
+  }
+  phoneHandler = val => {
+    this.setState({
+      phone: val
+    });
+  };
+  userAddHandler = () => {
+    this.props.onAddUser(this.props.name, this.state.phone, this.state.photo);
+    console.log(this.state.name);
+  };
   photoPickedHandler = image => {
     this.setState({
       photo: image
     });
   };
+
   render() {
     return (
       <View style={styles.container}>
@@ -39,8 +54,27 @@ class EditProfile extends Component {
           nume={this.props.name}
           photo={this.state.photo}
         />
-        <View>
-          <Input placeholder="INPUT WITH ICON" />
+        <View style={styles.body}>
+          <View style={styles.bodyContent}>
+            <Text style={styles.name}>{this.props.name}</Text>
+            <Text style={styles.info}>{this.props.email}</Text>
+            <View style={styles.textInput}>
+              <Input
+                onChangeText={this.phoneHandler}
+                placeholder="Phone number"
+              />
+            </View>
+            <View style={styles.textInput}>
+              <Input placeholder="Short description" />
+            </View>
+
+            <TouchableOpacity
+              onPress={this.userAddHandler}
+              style={styles.buttonContainer}
+            >
+              <Text>Save</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
     );
@@ -57,14 +91,16 @@ const styles = StyleSheet.create({
     borderRadius: 63,
     borderWidth: 4,
     borderColor: "white",
-    marginBottom: 10,
+    marginBottom: 5,
     alignSelf: "center",
     position: "absolute",
-    marginTop: 90
+    marginTop: 80
   },
   textInput: {
-    height: 40,
-    paddingLeft: 6
+    marginTop: 30,
+    marginBottom: 20,
+    width: "100%",
+    height: 20
   },
   name: {
     fontSize: 22,
@@ -72,7 +108,7 @@ const styles = StyleSheet.create({
     fontWeight: "600"
   },
   body: {
-    marginTop: 40
+    marginTop: 5
   },
   bodyContent: {
     flex: 1,
@@ -108,13 +144,18 @@ const styles = StyleSheet.create({
   }
 });
 const mapStateToProps = state => {
-  console.log(state.auth.name);
   return {
-    name: state.auth.name
+    name: state.auth.name,
+    email: state.auth.email
   };
 };
-
+const mapDispatchToProps = dispatch => {
+  return {
+    onAddUser: (name, phone, photo) =>
+      dispatch(addUserProfile(name, phone, photo))
+  };
+};
 export default connect(
   mapStateToProps,
-  null
+  mapDispatchToProps
 )(EditProfile);

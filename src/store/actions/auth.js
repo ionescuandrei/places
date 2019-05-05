@@ -7,7 +7,7 @@ const apiKey = "AIzaSyCObW-CUni5ICoxpot3NXr3UXzjr6L5vQ8";
 export const tryAuth = (authData, authMode) => {
   return dispatch => {
     dispatch(uiStartLoading());
-    dispatch(getName(authData.name));
+
     let url =
       "https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=" +
       apiKey;
@@ -46,15 +46,18 @@ export const tryAuth = (authData, authMode) => {
               resParsed.refreshToken
             )
           );
+          console.log(authData.name, authData.email);
+          dispatch(getName(authData.name, authData.email));
           startMainTab();
         }
       });
   };
 };
-export const getName = name => {
+export const getName = (name, email) => {
   return {
     type: TRY_AUTH,
-    name: name
+    name: name,
+    email: email
   };
 };
 export const authSetToken = (token, expiryDate) => {
