@@ -7,86 +7,145 @@ import {
   StyleSheet,
   TouchableOpacity,
   Platform,
-  Dimensions
+  Dimensions,
+  ScrollView,
+  Linking,
+  Alert
 } from "react-native";
 import { connect } from "react-redux";
 import { Navigation } from "react-native-navigation";
 import Icon from "react-native-vector-icons/Ionicons";
 import { deletePlace } from "../../store/actions/index";
 import GetDirections from "../../components/Direction/getDirections";
-import MapView from "react-native-maps";
+import { Badge, AirbnbRating, Divider } from "react-native-elements";
+import { updatePlace } from "../../store/actions/places";
 
 class PlaceDetail extends Component {
-  state = {
-    viewMode: "portrait"
-  };
-
   constructor(props) {
     super(props);
-    Dimensions.addEventListener("change", this.updateStyles);
+    this.state = {
+      viewMode: "portrait",
+      rating: props.selectedPlace.rating,
+      starchoose: true,
+      review: {
+        numeUser: "",
+        count: 0,
+        comment: ""
+      }
+    };
   }
-
-  componentWillUnmount() {
+  componentDidMount() {
+    Dimensions.addEventListener("change", this.updateStyles);
+    this.ratingCompleted = this.ratingCompleted.bind(this);
+    console.log("this is props", this.state.rating);
+  }
+  componentDidUpdate() {}
+  componentWillReceiveProps() {
     Dimensions.removeEventListener("change", this.updateStyles);
   }
   placeDeletedHandler = () => {
     this.props.onDeletePlace(this.props.selectedPlace.key);
     Navigation.pop("MyStack");
   };
+  ratingCompleted(rat) {
+    if (this.state.starchoose) {
+      this.setState(state => {
+        return {
+          rating: {
+            value: state.rating.value + rat,
+            count: state.rating.count + 1,
+            starchoose: false
+          }
+        };
+      });
+    }
 
+    this.props.onUpdateRating(this.props.selectedPlace.key, this.state.rating);
+    console.log("state", this.state.rating);
+  }
   updateStyles = dims => {
     this.setState({
       viewMode: dims.window.height > 500 ? "portrait" : "landscape"
     });
   };
-
+  callNumber = () => {
+    let phone = this.props.selectedPlace.phone;
+    let phoneNumber = phone;
+    if (Platform.OS !== "android") {
+      phoneNumber = `telprompt:${phone}`;
+    } else {
+      phoneNumber = `tel:${phone}`;
+    }
+    Linking.canOpenURL(phoneNumber)
+      .then(supported => {
+        if (!supported) {
+          Alert.alert("Phone number is not available");
+        } else {
+          return Linking.openURL(phoneNumber);
+        }
+      })
+      .catch(err => console.log(err));
+  };
   render() {
+    console.log("value", this.state.rating.value);
+    console.log("Count", this.state.rating.count);
+    const score = this.state.rating.value / this.state.rating.count;
     return (
-      <View
-        style={[
-          styles.container,
-          this.state.viewMode === "portrait"
-            ? styles.portraitContainer
-            : styles.landscapeContainer
-        ]}
-      >
-        <View style={styles.placeDetailContainer}>
-          <View style={styles.subContainer}>
+      <ScrollView style={styles.scroll}>
+        <View
+          style={[
+            styles.container,
+            this.state.viewMode === "portrait"
+              ? styles.portraitContainer
+              : styles.landscapeContainer
+          ]}
+        >
+          <View>
             <Image
               source={this.props.selectedPlace.image}
               style={styles.placeImage}
             />
           </View>
           <View style={styles.subContainer}>
-            <MapView
-              initialRegion={{
-                ...this.props.selectedPlace.location,
-                latitudeDelta: 0.0122,
-                longitudeDelta:
-                  (Dimensions.get("window").width /
-                    Dimensions.get("window").height) *
-                  0.0122
-              }}
-              style={styles.map}
-            >
-              <MapView.Marker coordinate={this.props.selectedPlace.location} />
-            </MapView>
-          </View>
-        </View>
-        <View style={styles.subContainer}>
-          <View>
-            <Text style={styles.placeName}>
-              {this.props.selectedPlace.name}
-            </Text>
-          </View>
-          <View>
-            <Text>Adress</Text>
-            <Text>{this.props.selectedPlace.adress}</Text>
-          </View>
-          <View>
-            <GetDirections
-              mylocation={this.props.mylocation}
-              location={this.props.selectedPlace.location}
+            <View style={styles.textContainer}>
+              <View style={styles.placeNameTitle}>
+                <Text style={styles.placeName}>
+                  {this.props.selectedPlace.name}
+                </Text>
+                <Text>Cusine: {this.props.selectedPlace.type}</Text>
+              </View>
+
+              <View style={styles.badgeContaniner}>
+                <Text style={styles.badge}>{score}</Text>
+                <Divider style={{ backgroundColor: "#258" }} />
+              </View>
+            </View>
+            <TouchableOpacity onPress={this.callNumber}>
+              <View style={styles.callButton}>
+                <Icon
+                  size={30}
+                  name={Platform.OS === "android" ? "md-call" : "ios-call"}
+                  color="blue"
+                />
+              </View>
+            </TouchableOpacity>
+            <View>
+              <Text style={styles.adressStyle}>
+                {this.props.selectedPlace.adress}
+              </Text>
+            </View>
+            <View>
+              <GetDirections
+                mylocation={this.props.mylocation}
+                location={this.props.selectedPlace.location}
+              />
+            </View>
+            <AirbnbRating
+              count={5}
+              reviews={["Bad", "Good", "Very Good", "Amazing", "Unbelievable"]}
+              defaultRating={2}
+              size={20}
+              onFinishRating={this.ratingCompleted}
             />
             <TouchableOpacity onPress={this.placeDeletedHandler}>
               <View style={styles.deleteButton}>
@@ -99,15 +158,19 @@ class PlaceDetail extends Component {
             </TouchableOpacity>
           </View>
         </View>
-      </View>
+      </ScrollView>
     );
   }
 }
 
 const styles = StyleSheet.create({
+  scroll: { height: "100%", width: "100%" },
   container: {
-    margin: 22,
-    flex: 1
+    display: "flex"
+  },
+  subContainer: {
+    flex: 1,
+    margin: 15
   },
   portraitContainer: {
     flexDirection: "column"
@@ -115,32 +178,46 @@ const styles = StyleSheet.create({
   landscapeContainer: {
     flexDirection: "row"
   },
-  placeDetailContainer: {
-    flex: 2
-  },
   placeImage: {
-    width: "100%",
-    height: "100%"
+    width: 500,
+    height: 250
   },
+  placeNameTitle: {
+    alignItems: "flex-start",
+    backgroundColor: "#897"
+  },
+  badgeContaniner: {
+    alignItems: "center",
+    justifyContent: "center",
+    height: 30,
+    width: 30,
+    backgroundColor: "#258"
+  },
+  badge: { fontSize: 18 },
   placeName: {
     fontWeight: "bold",
-    textAlign: "center",
+    textAlign: "left",
     fontSize: 28
   },
-  map: {
-    ...StyleSheet.absoluteFillObject
+  adressStyle: {
+    fontSize: 20,
+    fontFamily: "Times New Roman"
+  },
+  textContainer: {
+    flex: 1,
+    marginBottom: 10,
+    flexDirection: "row",
+    backgroundColor: "#005"
   },
   deleteButton: {
     alignItems: "center"
-  },
-  subContainer: {
-    flex: 1
   }
 });
 
 const mapDispatchToProps = dispatch => {
   return {
-    onDeletePlace: key => dispatch(deletePlace(key))
+    onDeletePlace: key => dispatch(deletePlace(key)),
+    onUpdateRating: (key, rating) => dispatch(updatePlace(key, rating))
   };
 };
 

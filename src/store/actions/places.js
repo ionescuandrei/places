@@ -4,13 +4,26 @@ import {
   PLACE_ADDED,
   START_ADD_PLACE
 } from "./actionTypes";
-import { uiStartLoading, uiStopLoading, authGetToken } from "./index";
+import {
+  uiStartLoading,
+  uiStopLoading,
+  authGetToken,
+  authLogout
+} from "./index";
 export const startAddPlace = () => {
   return {
     type: START_ADD_PLACE
   };
 };
-export const addPlace = (placeName, location, image, type, adress) => {
+export const addPlace = (
+  placeName,
+  location,
+  image,
+  type,
+  adress,
+  phone,
+  rating
+) => {
   return dispatch => {
     let authToken;
     dispatch(uiStartLoading());
@@ -40,7 +53,9 @@ export const addPlace = (placeName, location, image, type, adress) => {
           location: location,
           image: parsedRes.imageUrl,
           type: type,
-          adress: adress
+          adress: adress,
+          phone: phone,
+          rating: rating
         };
         return fetch(
           "https://voucher-221208.firebaseio.com/places.json?auth=" + authToken,
@@ -101,6 +116,7 @@ export const getPlace = () => {
         dispatch(setPlaces(places));
       })
       .catch(err => {
+        dispatch(authLogout());
         alert("Something went wrong loading ...");
         console.log(err);
       });
@@ -112,7 +128,36 @@ export const setPlaces = places => {
     places: places
   };
 };
-
+export const updatePlace = (key, rating) => {
+  return dispatch => {
+    dispatch(authGetToken())
+      .then(token => {
+        return fetch(
+          "https://voucher-221208.firebaseio.com/places/" +
+            key +
+            "/rating" +
+            ".json?auth=" +
+            token,
+          {
+            method: "PUT",
+            body: JSON.stringify(rating)
+          }
+        );
+      })
+      .catch(() => {
+        alert("No valid token found!");
+      })
+      .then(res => res.json())
+      .then(parsedRes => {
+        console.log("Done!");
+        alert("Thank you!");
+      })
+      .catch(err => {
+        alert("Something went wrong, sorry :/");
+        console.log(err);
+      });
+  };
+};
 export const deletePlace = key => {
   return dispatch => {
     dispatch(authGetToken())

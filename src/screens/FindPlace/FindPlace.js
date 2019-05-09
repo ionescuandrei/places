@@ -100,7 +100,7 @@ class FindPlaces extends Component {
         options: {
           topBar: {
             title: {
-              text: selPlace.name
+              visible: false
             }
           }
         }

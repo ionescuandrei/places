@@ -16,43 +16,46 @@ import ButtonWithbackground from "../../UI/buttonWithBackground/ButtonWithBackgr
 import validate from "../../utility/validation";
 import { connect } from "react-redux";
 import { tryAuth, authAutoSignIn } from "../../store/actions/index";
+import firebase from "react-native-firebase";
 
 class AuthScreen extends React.Component {
-  state = {
-    viewMode: Dimensions.get("window").height > 500 ? "portrait" : "landscape",
-    authMode: "login",
-    controls: {
-      name: {
-        value: ""
-      },
-      email: {
-        value: "",
-        valid: false,
-        validationRules: {
-          isEmail: true
+  constructor() {
+    super();
+    this.ref = firebase.firestore().collection("users");
+    this.state = {
+      viewMode:
+        Dimensions.get("window").height > 500 ? "portrait" : "landscape",
+      authMode: "login",
+      controls: {
+        name: {
+          value: ""
         },
-        touched: false
-      },
-      password: {
-        value: "",
-        valid: false,
-        validationRules: {
-          minLenght: 6
+        email: {
+          value: "",
+          valid: false,
+          validationRules: {
+            isEmail: true
+          },
+          touched: false
         },
-        touched: false
-      },
-      confirmPassword: {
-        value: "",
-        valid: false,
-        validationRules: {
-          equalTo: "password"
+        password: {
+          value: "",
+          valid: false,
+          validationRules: {
+            minLenght: 6
+          },
+          touched: false
         },
-        touched: false
+        confirmPassword: {
+          value: "",
+          valid: false,
+          validationRules: {
+            equalTo: "password"
+          },
+          touched: false
+        }
       }
-    }
-  };
-  constructor(props) {
-    super(props);
+    };
     Dimensions.addEventListener("change", this.updateStyles);
   }
   componentWillUnmount() {
@@ -79,6 +82,12 @@ class AuthScreen extends React.Component {
       email: this.state.controls.email.value,
       password: this.state.controls.password.value
     };
+    if (this.state.authMode === "signup") {
+      this.ref.doc(authData.email).set({
+        name: this.state.controls.name.value,
+        email: this.state.controls.email.value
+      });
+    }
     this.props.onTryAuth(authData, this.state.authMode);
   };
   nameHandler = val => {

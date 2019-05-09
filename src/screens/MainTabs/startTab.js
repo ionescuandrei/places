@@ -50,29 +50,45 @@ const startTab = () => {
                               bottomTab: {
                                 text: "Find",
                                 icon: findTab,
-                                testID: "FIRST_TAB_BAR_BUTTON",
                                 iconColor: "red",
                                 selectedIconColor: "blue"
                               }
                             }
                           }
                         }
-                      ],
-                      options: {
-                        //   topBar: {
-                        //                 leftButtons: [
-                        //                   {
-                        //                     id: 'buttonOne',
-                        //                     icon: sideBtnFind
-                        //                   }
-                        //                               ]
-                        //               },
-                        //  bottomTab: {
-                        //                 text: 'Find',
-                        //                 icon:findTab,
-                        //                 testID: 'FIRST_TAB_BAR_BUTTON'
-                        //               }
-                      }
+                      ]
+                    }
+                  },
+                  {
+                    stack: {
+                      id: "MyStack3",
+                      children: [
+                        {
+                          component: {
+                            name: "places.MapSearch",
+                            id: "mapSearch",
+                            passProps: {
+                              text: "This is tab 2"
+                            },
+                            options: {
+                              bottomTab: {
+                                text: "Map",
+                                icon: mapBtn,
+                                iconColor: "red",
+                                selectedIconColor: "blue"
+                              },
+                              topBar: {
+                                leftButtons: [
+                                  {
+                                    id: "buttonOne",
+                                    icon: sideBtnFind
+                                  }
+                                ]
+                              }
+                            }
+                          }
+                        }
+                      ]
                     }
                   },
                   {
@@ -105,70 +121,7 @@ const startTab = () => {
                             }
                           }
                         }
-                      ],
-                      options: {
-                        //   topBar: {
-                        //                 leftButtons: [
-                        //                   {
-                        //                     id: 'buttonOne',
-                        //                     icon: sideBtnFind
-                        //                   }
-                        //                               ]
-                        //               },
-                        //  bottomTab: {
-                        //                 text: 'Find',
-                        //                 icon:findTab,
-                        //                 testID: 'FIRST_TAB_BAR_BUTTON'
-                        //               }
-                      }
-                    }
-                  },
-                  {
-                    stack: {
-                      id: "MyStack3",
-                      children: [
-                        {
-                          component: {
-                            name: "places.MapSearch",
-                            id: "mapSearch",
-                            passProps: {
-                              text: "This is tab 2"
-                            },
-                            options: {
-                              bottomTab: {
-                                text: "Map",
-                                icon: mapBtn,
-                                testID: "SECOND_TAB_BAR_BUTTON",
-                                iconColor: "red",
-                                selectedIconColor: "blue"
-                              },
-                              topBar: {
-                                leftButtons: [
-                                  {
-                                    id: "buttonOne",
-                                    icon: sideBtnFind
-                                  }
-                                ]
-                              }
-                            }
-                          }
-                        }
-                      ],
-                      options: {
-                        //   topBar: {
-                        //                 leftButtons: [
-                        //                   {
-                        //                     id: 'buttonOne',
-                        //                     icon: sideBtnFind
-                        //                   }
-                        //                               ]
-                        //               },
-                        //  bottomTab: {
-                        //                 text: 'Find',
-                        //                 icon:findTab,
-                        //                 testID: 'FIRST_TAB_BAR_BUTTON'
-                        //               }
-                      }
+                      ]
                     }
                   }
                 ]

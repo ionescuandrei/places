@@ -53,10 +53,12 @@ export default class ListType extends Component {
     return (
       <View>
         <View style={styles.containerHeader}>
-          <View>
-            <Text style={styles.textName}>Type</Text>
-            <PickedType onTypePickedProp={this.searchFilterFunctionType} />
+          <View style={styles.wrapper}>
+            <View style={styles.titleWrapper}>
+              <Text style={styles.textName}>Choose your cusine</Text>
+            </View>
           </View>
+          <PickedType onTypePickedProp={this.searchFilterFunctionType} />
         </View>
         <FlatList
           style={styles.listContainer}
@@ -85,10 +87,18 @@ const styles = StyleSheet.create({
     flex: 1
   },
   textName: {
-    fontSize: 24,
-    paddingTop: 15,
-    paddingBottom: 15,
-    paddingLeft: 15,
-    color: "red"
+    fontSize: 22,
+    fontWeight: "600"
+  },
+  wrapper: {
+    display: "flex"
+  },
+  titleWrapper: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingLeft: 21,
+    paddingRight: 21
   }
 });

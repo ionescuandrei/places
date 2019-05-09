@@ -56,6 +56,14 @@ class SharePlace extends Component {
         adress: {
           value: "",
           valid: false
+        },
+        phone: {
+          value: "",
+          valid: false
+        },
+        rating: {
+          value: 5,
+          count: 1
         }
       }
     });
@@ -99,6 +107,19 @@ class SharePlace extends Component {
       };
     });
   };
+  placePhonesHandler = val => {
+    this.setState(prevState => {
+      return {
+        controls: {
+          ...prevState.controls,
+          phone: {
+            ...prevState.controls.phone,
+            value: val
+          }
+        }
+      };
+    });
+  };
   pickedTypeHandler = val => {
     this.setState(prevState => {
       return {
@@ -128,7 +149,9 @@ class SharePlace extends Component {
       this.state.controls.location.value,
       this.state.controls.image.value,
       this.state.controls.type.value,
-      this.state.controls.adress.value
+      this.state.controls.adress.value,
+      this.state.controls.phone.value,
+      this.state.controls.rating
     );
 
     this.reset();
@@ -208,6 +231,12 @@ class SharePlace extends Component {
               placeholder="Adress"
             />
           </View>
+          <View style={styles.placeInputText}>
+            <DefaultInput
+              onChangeText={this.placePhonesHandler}
+              placeholder="Phone"
+            />
+          </View>
           <PickedType onTypePickedProp={this.pickedTypeHandler} />
           {submitButton}
         </View>
@@ -264,8 +293,10 @@ const mapStateToProps = state => {
 };
 const mapDispatchToProps = dispatch => {
   return {
-    onAddPlace: (placeName, location, image, type, adress) =>
-      dispatch(addPlace(placeName, location, image, type, adress)),
+    onAddPlace: (placeName, location, image, type, adress, phone, rating) =>
+      dispatch(
+        addPlace(placeName, location, image, type, adress, phone, rating)
+      ),
     onStartAddedPlace: () => dispatch(startAddPlace())
   };
 };

@@ -1,7 +1,8 @@
 import {
   SET_AUTH_TOKEN,
   AUTH_REMOVE_TOKEN,
-  TRY_AUTH
+  TRY_AUTH,
+  GET_EMAIL
 } from "../actions/actionTypes";
 
 const initialState = {
@@ -29,6 +30,11 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         name: action.name,
+        email: action.email
+      };
+    case GET_EMAIL:
+      return {
+        ...state,
         email: action.email
       };
     default:

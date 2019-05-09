@@ -13,31 +13,62 @@ import { addUserProfile } from "../../store/actions/users";
 import AvatarPickPhoto from "../../components/AvatarPickPhoto/AvatarPickPhoto";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { Input } from "react-native-elements";
+import firebase from "react-native-firebase";
 
 class EditProfile extends Component {
-  state = {
-    name: "",
-    photo: { uri: "https://bootdey.com/img/Content/avatar/avatar6.png" },
-    phone: "",
-    location: "",
-    description: "",
-    reviews: "",
-    email: ""
-  };
+  constructor() {
+    super();
+    this.ref = firebase.firestore().collection("users");
+    this.unsubscribe = null;
+    this.state = {
+      name: "",
+      photo: { uri: "https://bootdey.com/img/Content/avatar/avatar6.png" },
+      phone: "",
+      location: "",
+      description: "",
+      reviews: "",
+      email: ""
+    };
+  }
 
   componentDidMount() {
-    this.setState({
-      name: this.props.name
-    });
+    this.onCollectionUpdate();
   }
+  onCollectionUpdate = () => {
+    var getDoc = this.ref
+      .doc(this.props.email)
+      .get()
+      .then(doc => {
+        this.setState({
+          name: doc.data().name,
+          email: doc.data().email,
+          phone: doc.data().phone,
+          photo: { uri: doc.data().photo }
+        });
+      })
+      .catch(err => {
+        console.log("Error getting document", err);
+      });
+  };
+
   phoneHandler = val => {
     this.setState({
       phone: val
     });
   };
   userAddHandler = () => {
-    this.props.onAddUser(this.props.name, this.state.phone, this.state.photo);
+    console.log("starea curenta", this.state.email, this.state.name);
+    this.props.onAddUser(this.state.name, this.state.phone, this.state.photo);
     console.log(this.state.name);
+    this.ref.doc(this.state.email).set(
+      {
+        name: this.state.name,
+        email: this.state.email,
+        phone: this.state.phone,
+        photo: this.state.photo.uri
+      },
+      { merge: true }
+    );
   };
   photoPickedHandler = image => {
     this.setState({
@@ -51,13 +82,13 @@ class EditProfile extends Component {
         <AvatarPickPhoto
           onImagePicked={this.photoPickedHandler}
           ref={ref => (this.pickedImage = ref)}
-          nume={this.props.name}
+          nume={this.state.name}
           photo={this.state.photo}
         />
         <View style={styles.body}>
           <View style={styles.bodyContent}>
-            <Text style={styles.name}>{this.props.name}</Text>
-            <Text style={styles.info}>{this.props.email}</Text>
+            <Text style={styles.name}>{this.state.name}</Text>
+            <Text style={styles.info}>{this.state.email}</Text>
             <View style={styles.textInput}>
               <Input
                 onChangeText={this.phoneHandler}

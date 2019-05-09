@@ -1,11 +1,18 @@
 import React, { Component } from "react";
-import { StyleSheet, FlatList, View, Text } from "react-native";
+import {
+  StyleSheet,
+  FlatList,
+  View,
+  Text,
+  TouchableOpacity
+} from "react-native";
 import ListItem from "../ListItem/ListItem";
 import HorizontalListItem from "../HorizontalListItem/HorizontalListItem";
 import { SearchBar } from "react-native-elements";
 import PickedType from "../PickedType/PickedType";
 import NearLocation from "../NearLocations/NearLocations";
 import geolib from "geolib";
+import Icon from "react-native-vector-icons/FontAwesome";
 
 export default class placeList extends Component {
   constructor(props) {
@@ -54,8 +61,6 @@ export default class placeList extends Component {
     return (
       <View style={styles.containerHeader}>
         <View>
-          <Text style={styles.textName}>Name</Text>
-
           <SearchBar
             placeholder="Type Here..."
             lightTheme
@@ -64,6 +69,15 @@ export default class placeList extends Component {
             autoCorrect={false}
             value={this.state.value}
           />
+        </View>
+        <View style={styles.wrapper}>
+          <View style={styles.titleWrapper}>
+            <Text style={styles.title}>Go out for launch or dinner</Text>
+            <TouchableOpacity style={styles.seeAllBtn}>
+              <Text style={styles.seeAllBtnText}>See all</Text>
+              <Icon name="angle-right" size={18} />
+            </TouchableOpacity>
+          </View>
         </View>
         <FlatList
           horizontal
@@ -88,6 +102,31 @@ export default class placeList extends Component {
 }
 
 const styles = StyleSheet.create({
+  wrapper: {
+    display: "flex"
+  },
+  titleWrapper: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingLeft: 21,
+    paddingRight: 21
+  },
+  title: {
+    fontSize: 22,
+    fontWeight: "600"
+  },
+  seeAllBtn: {
+    marginTop: 2,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between"
+  },
+  seeAllBtnText: {
+    color: "grey",
+    marginRight: 5
+  },
   containerHeader: {
     flex: 1
   },

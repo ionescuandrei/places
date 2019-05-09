@@ -10,3 +10,4 @@ export const SET_AUTH_TOKEN = "SET_AUTH_TOKEN";
 export const AUTH_REMOVE_TOKEN = "AUTH_REMOVE_TOKEN";
 export const ADD_USER = "ADD_USER";
 export const GET_USER = "GET_USER";
+export const GET_EMAIL = "GET_EMAIL";

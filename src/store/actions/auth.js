@@ -1,4 +1,9 @@
-import { TRY_AUTH, SET_AUTH_TOKEN, AUTH_REMOVE_TOKEN } from "./actionTypes";
+import {
+  TRY_AUTH,
+  SET_AUTH_TOKEN,
+  AUTH_REMOVE_TOKEN,
+  GET_EMAIL
+} from "./actionTypes";
 import { uiStartLoading, uiStopLoading } from "./index";
 import startMainTab from "../../screens/MainTabs/startTab";
 import { AsyncStorage } from "react-native";
@@ -7,7 +12,7 @@ const apiKey = "AIzaSyCObW-CUni5ICoxpot3NXr3UXzjr6L5vQ8";
 export const tryAuth = (authData, authMode) => {
   return dispatch => {
     dispatch(uiStartLoading());
-
+    AsyncStorage.setItem("place:auth:email", authData.email);
     let url =
       "https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=" +
       apiKey;
@@ -60,6 +65,12 @@ export const getName = (name, email) => {
     email: email
   };
 };
+export const getEmail = email => {
+  return {
+    type: GET_EMAIL,
+    email: email
+  };
+};
 export const authSetToken = (token, expiryDate) => {
   return {
     type: SET_AUTH_TOKEN,
@@ -86,6 +97,10 @@ export const authGetToken = () => {
       const expiryDate = getState().auth.expiryDate;
       if (!token || new Date(expiryDate) <= new Date()) {
         let fetchedToken;
+        AsyncStorage.getItem("place:auth:email")
+          .catch(err => reject())
+          .then(email => dispatch(getEmail(email)));
+
         AsyncStorage.getItem("place:auth:token")
           .catch(err => reject())
           .then(tokenFromStorage => {

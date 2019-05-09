@@ -7,21 +7,15 @@ export const goToAuth = () =>
         children: [
           {
             component: {
-              name: "places.AuthScreen",
-              passProps: {
-                text: "stack with one child"
-              }
+              name: "places.AuthScreen"
             }
           }
         ],
         options: {
           topBar: {
-            title: {
-              text: "Welcome to Finder",
-              color: "#039BE5",
-              fontSize: 24,
-              alignment: "center"
-            }
+            visible: false,
+            drawBehind: true,
+            animate: false
           }
         }
       }
