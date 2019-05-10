@@ -39,11 +39,9 @@ class PlaceDetail extends Component {
     this.ratingCompleted = this.ratingCompleted.bind(this);
     console.log("this is props", this.state.rating);
   }
-  componentDidUpdate() {}
-  componentWillReceiveProps() {
-    Dimensions.removeEventListener("change", this.updateStyles);
-  }
+
   placeDeletedHandler = () => {
+    Dimensions.removeEventListener("change", this.updateStyles);
     this.props.onDeletePlace(this.props.selectedPlace.key);
     Navigation.pop("MyStack");
   };
@@ -116,37 +114,45 @@ class PlaceDetail extends Component {
               </View>
 
               <View style={styles.badgeContaniner}>
-                <Text style={styles.badge}>{score}</Text>
-                <Divider style={{ backgroundColor: "#258" }} />
+                <Text style={styles.badge}>{score.toFixed(1)}</Text>
               </View>
             </View>
-            <TouchableOpacity onPress={this.callNumber}>
-              <View style={styles.callButton}>
-                <Icon
-                  size={30}
-                  name={Platform.OS === "android" ? "md-call" : "ios-call"}
-                  color="blue"
-                />
-              </View>
-            </TouchableOpacity>
-            <View>
+            <Divider style={{ margin: 10, backgroundColor: "#333" }} />
+            <View style={styles.adressContainer}>
               <Text style={styles.adressStyle}>
                 {this.props.selectedPlace.adress}
               </Text>
+              <TouchableOpacity onPress={this.callNumber}>
+                <View style={styles.callButton}>
+                  <Icon
+                    size={30}
+                    name={Platform.OS === "android" ? "md-call" : "ios-call"}
+                    color="blue"
+                  />
+                </View>
+              </TouchableOpacity>
             </View>
+            <Divider style={{ margin: 10, backgroundColor: "#333" }} />
             <View>
-              <GetDirections
-                mylocation={this.props.mylocation}
-                location={this.props.selectedPlace.location}
+              <AirbnbRating
+                count={5}
+                reviews={[
+                  "Bad",
+                  "Good",
+                  "Very Good",
+                  "Amazing",
+                  "Unbelievable"
+                ]}
+                defaultRating={2}
+                size={15}
+                onFinishRating={this.ratingCompleted}
               />
             </View>
-            <AirbnbRating
-              count={5}
-              reviews={["Bad", "Good", "Very Good", "Amazing", "Unbelievable"]}
-              defaultRating={2}
-              size={20}
-              onFinishRating={this.ratingCompleted}
+            <GetDirections
+              mylocation={this.props.mylocation}
+              location={this.props.selectedPlace.location}
             />
+
             <TouchableOpacity onPress={this.placeDeletedHandler}>
               <View style={styles.deleteButton}>
                 <Icon
@@ -183,15 +189,17 @@ const styles = StyleSheet.create({
     height: 250
   },
   placeNameTitle: {
-    alignItems: "flex-start",
-    backgroundColor: "#897"
+    alignItems: "flex-start"
   },
   badgeContaniner: {
     alignItems: "center",
     justifyContent: "center",
+    flexDirection: "row",
     height: 30,
-    width: 30,
-    backgroundColor: "#258"
+    width: 40,
+    borderRadius: 10,
+    backgroundColor: "#258",
+    alignSelf: "flex-start"
   },
   badge: { fontSize: 18 },
   placeName: {
@@ -205,12 +213,17 @@ const styles = StyleSheet.create({
   },
   textContainer: {
     flex: 1,
+    justifyContent: "space-between",
     marginBottom: 10,
-    flexDirection: "row",
-    backgroundColor: "#005"
+    flexDirection: "row"
   },
   deleteButton: {
     alignItems: "center"
+  },
+  adressContainer: {
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "space-between"
   }
 });
 

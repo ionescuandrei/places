@@ -100,7 +100,9 @@ class FindPlaces extends Component {
         options: {
           topBar: {
             title: {
-              visible: false
+              visible: false,
+              drawBehind: true,
+              animate: false
             }
           }
         }

@@ -116,6 +116,7 @@ export default class NearLocations extends Component {
             onPress={this.getLocationHandler}
           />
         </View>
+        {/* https://codedaily.io/tutorials/9/Build-a-Map-with-Custom-Animated-Markers-and-Region-Focus-when-Content-is-Scrolled-in-React-Native */}
       </View>
     );
   }
@@ -127,7 +128,7 @@ const styles = StyleSheet.create({
   },
   map: {
     width: "100%",
-    height: 250
+    height: "90%"
   },
   button: {
     margin: 8
