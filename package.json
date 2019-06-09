@@ -9,6 +9,7 @@
   "dependencies": {
     "firebase": "^5.11.1",
     "geolib": "^2.0.24",
+    "moment": "^2.24.0",
     "react": "16.6.1",
     "react-native": "0.57.5",
     "react-native-elements": "^1.0.0",

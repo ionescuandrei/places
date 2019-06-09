@@ -1,17 +1,10 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import {
-  View,
-  TextInput,
-  Text,
-  StyleSheet,
-  Dimensions,
-  Image,
-  TouchableOpacity
-} from "react-native";
+import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
+import { Navigation } from "react-native-navigation";
 import { addUserProfile } from "../../store/actions/users";
 import AvatarPickPhoto from "../../components/AvatarPickPhoto/AvatarPickPhoto";
-import Icon from "react-native-vector-icons/FontAwesome";
+
 import { Input } from "react-native-elements";
 import firebase from "react-native-firebase";
 
@@ -25,14 +18,23 @@ class EditProfile extends Component {
       photo: { uri: "https://bootdey.com/img/Content/avatar/avatar6.png" },
       phone: "",
       location: "",
-      description: "",
       reviews: "",
       email: ""
     };
   }
+  navigationButtonPressed({ buttonTwo }) {
+    Navigation.mergeOptions("Drawer", {
+      sideMenu: {
+        left: {
+          visible: true
+        }
+      }
+    });
+  }
 
   componentDidMount() {
     this.onCollectionUpdate();
+    Navigation.events().bindComponent(this);
   }
   onCollectionUpdate = () => {
     var getDoc = this.ref
@@ -43,7 +45,8 @@ class EditProfile extends Component {
           name: doc.data().name,
           email: doc.data().email,
           phone: doc.data().phone,
-          photo: { uri: doc.data().photo }
+          photo: { uri: doc.data().photo },
+          location: doc.data().location
         });
       })
       .catch(err => {
@@ -51,13 +54,13 @@ class EditProfile extends Component {
       });
   };
 
-  phoneHandler = val => {
-    this.setState({
-      phone: val
-    });
+  phoneHandler = phone => {
+    this.setState({ phone });
+  };
+  locationHandler = location => {
+    this.setState({ location });
   };
   userAddHandler = () => {
-    console.log("starea curenta", this.state.email, this.state.name);
     this.props.onAddUser(this.state.name, this.state.phone, this.state.photo);
     console.log(this.state.name);
     this.ref.doc(this.state.email).set(
@@ -65,7 +68,8 @@ class EditProfile extends Component {
         name: this.state.name,
         email: this.state.email,
         phone: this.state.phone,
-        photo: this.state.photo.uri
+        photo: this.state.photo.uri,
+        location: this.state.location
       },
       { merge: true }
     );
@@ -79,24 +83,32 @@ class EditProfile extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <AvatarPickPhoto
-          onImagePicked={this.photoPickedHandler}
-          ref={ref => (this.pickedImage = ref)}
-          nume={this.state.name}
-          photo={this.state.photo}
-        />
+        <View style={styles.header}>
+          <AvatarPickPhoto
+            onImagePicked={this.photoPickedHandler}
+            ref={ref => (this.pickedImage = ref)}
+            nume={this.state.name}
+            photo={this.state.photo}
+          />
+        </View>
+
         <View style={styles.body}>
           <View style={styles.bodyContent}>
             <Text style={styles.name}>{this.state.name}</Text>
             <Text style={styles.info}>{this.state.email}</Text>
-            <View style={styles.textInput}>
+            <View style={styles.textIn}>
               <Input
-                onChangeText={this.phoneHandler}
-                placeholder="Phone number"
+                onChangeText={this.phoneHandler.bind(this)}
+                placeholder={this.state.phone}
+                value={this.state.phone}
               />
             </View>
-            <View style={styles.textInput}>
-              <Input placeholder="Short description" />
+            <View style={styles.textIn}>
+              <Input
+                placeholder={this.state.location}
+                onChangeText={this.locationHandler.bind(this)}
+                value={this.state.location}
+              />
             </View>
 
             <TouchableOpacity
@@ -112,22 +124,7 @@ class EditProfile extends Component {
   }
 }
 const styles = StyleSheet.create({
-  header: {
-    backgroundColor: "#00BFFF",
-    height: 200
-  },
-  avatar: {
-    width: 130,
-    height: 130,
-    borderRadius: 63,
-    borderWidth: 4,
-    borderColor: "white",
-    marginBottom: 5,
-    alignSelf: "center",
-    position: "absolute",
-    marginTop: 80
-  },
-  textInput: {
+  textIn: {
     marginTop: 30,
     marginBottom: 20,
     width: "100%",
@@ -156,12 +153,7 @@ const styles = StyleSheet.create({
     color: "#00BFFF",
     marginTop: 10
   },
-  description: {
-    fontSize: 16,
-    color: "#696969",
-    marginTop: 10,
-    textAlign: "center"
-  },
+
   buttonContainer: {
     marginTop: 10,
     height: 45,
@@ -182,8 +174,8 @@ const mapStateToProps = state => {
 };
 const mapDispatchToProps = dispatch => {
   return {
-    onAddUser: (name, phone, photo) =>
-      dispatch(addUserProfile(name, phone, photo))
+    onAddUser: (name, phone, photo, location) =>
+      dispatch(addUserProfile(name, phone, photo, location))
   };
 };
 export default connect(

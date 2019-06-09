@@ -1,8 +1,9 @@
 import { GET_USER, ADD_USER } from "./actionTypes";
 
-export const addUserProfile = (name, phone, photo) => ({
+export const addUserProfile = (name, phone, photo, location) => ({
   type: ADD_USER,
   name: name,
   phone: phone,
-  photo: photo
+  photo: photo,
+  location: location
 });

@@ -10,16 +10,16 @@ import {
 import { connect } from "react-redux";
 import { Navigation } from "react-native-navigation";
 import { getPlace } from "../../store/actions/index";
-import ListType from "../../components/ListType/Listtype";
 import PlaceList from "../../components/PlaceList/PlaceList";
 class FindPlaces extends Component {
   static options(passProps) {
     return {
       topBar: {
         title: {
-          text: "Search by",
+          text: "Restaurant Finder",
           fontSize: 25,
-          color: "#039BE5",
+          fontWeight: "bold",
+          color: "#039B",
           fontFamily: "Helvetica",
           alignment: "center"
         }
@@ -146,7 +146,9 @@ class FindPlaces extends Component {
       >
         <TouchableOpacity onPress={this.placesSearchHandler}>
           <View style={styles.searchButton}>
-            <Text style={styles.searchButtonText}>Find Places</Text>
+            <Text style={styles.searchButtonText}>
+              Caută cele mai bune locații
+            </Text>
           </View>
         </TouchableOpacity>
       </Animated.View>
@@ -160,11 +162,6 @@ class FindPlaces extends Component {
         >
           <ScrollView>
             <PlaceList
-              places={this.props.places}
-              onItemSelected={this.itemSelectedHandler}
-              mylocation={this.state.mycoordonate}
-            />
-            <ListType
               places={this.props.places}
               onItemSelected={this.itemSelectedHandler}
               mylocation={this.state.mycoordonate}

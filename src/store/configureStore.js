@@ -3,7 +3,6 @@ import thunk from "redux-thunk";
 import uiReducer from "./reducers/ui";
 import authReducer from "./reducers/auth";
 import usersReducer from "./reducers/users";
-
 import placesReducer from "./reducers/places";
 
 const rootReducer = combineReducers({

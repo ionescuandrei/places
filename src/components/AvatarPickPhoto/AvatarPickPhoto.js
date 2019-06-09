@@ -39,28 +39,19 @@ export default class AvatarPickPhoto extends Component {
     return (
       <View style={styles.container}>
         <View style={styles.header} />
-        <Image source={this.props.photo} style={styles.avatar} />
+        <Image
+          source={
+            this.props.photo === null
+              ? {
+                  uri: "https://bootdey.com/img/Content/avatar/avatar6.png"
+                }
+              : this.props.photo
+          }
+          style={styles.avatar}
+        />
         <View>
           <Button title="Edit Photo" onPress={this.pickImageHandler} />
         </View>
-
-        {/* <View style={styles.body}>
-          <View style={styles.bodyContent}>
-            <Text style={styles.name}>{this.props.nume}</Text>
-            <Text style={styles.info}>UX Designer / Mobile developer</Text>
-            <Text style={styles.description}>
-              Lorem ipsum dolor sit amet, saepe sapientem eu nam. Qui ne assum
-              electram expetendis, omittam deseruisse consequuntur ius an,
-            </Text>
-
-            <TouchableOpacity style={styles.buttonContainer}>
-              <Text>Opcion 1</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.buttonContainer}>
-              <Text>Opcion 2</Text>
-            </TouchableOpacity>
-          </View>
-        </View> */}
       </View>
     );
   }
@@ -68,7 +59,7 @@ export default class AvatarPickPhoto extends Component {
 const styles = StyleSheet.create({
   header: {
     backgroundColor: "#00BFFF",
-    height: 200
+    height: 180
   },
   avatar: {
     width: 130,
@@ -79,46 +70,6 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     alignSelf: "center",
     position: "absolute",
-    marginTop: 50
-  },
-  name: {
-    fontSize: 22,
-    color: "#FFFFFF",
-    fontWeight: "600"
-  },
-  body: {
-    marginTop: 40
-  },
-  bodyContent: {
-    flex: 1,
-    alignItems: "center",
-    padding: 30
-  },
-  name: {
-    fontSize: 28,
-    color: "#696969",
-    fontWeight: "600"
-  },
-  info: {
-    fontSize: 16,
-    color: "#00BFFF",
-    marginTop: 10
-  },
-  description: {
-    fontSize: 16,
-    color: "#696969",
-    marginTop: 10,
-    textAlign: "center"
-  },
-  buttonContainer: {
-    marginTop: 10,
-    height: 45,
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    marginBottom: 20,
-    width: 250,
-    borderRadius: 30,
-    backgroundColor: "#00BFFF"
+    marginTop: 30
   }
 });

@@ -4,7 +4,9 @@ import {
   FlatList,
   View,
   Text,
-  TouchableOpacity
+  TouchableOpacity,
+  Switch,
+  Picker
 } from "react-native";
 import ListItem from "../ListItem/ListItem";
 import HorizontalListItem from "../HorizontalListItem/HorizontalListItem";
@@ -12,48 +14,90 @@ import { SearchBar } from "react-native-elements";
 import PickedType from "../PickedType/PickedType";
 import NearLocation from "../NearLocations/NearLocations";
 import geolib from "geolib";
-import Icon from "react-native-vector-icons/FontAwesome";
 
 export default class placeList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: this.props.places,
-      typeValue: "italian"
+      data: [],
+      dataSorted: [],
+      typeValue: "mixt",
+      tipSortare: "rating"
     };
+    this.getDistances = this.getDistances.bind(this);
+    this.onTypePicked = this.onTypePicked.bind(this);
   }
   componentWillMount() {
     this.getDistances();
   }
+  componentDidMount() {
+    this.getDistances();
+  }
+  searchFilterFunctionRating = () => {
+    const newData = this.state.dataSorted.sort((item1, item2) => {
+      item1 = item1.rating.value / item1.rating.count;
+      item2 = item2.rating.value / item2.rating.count;
+      return item1 < item2;
+    });
+    console.log("sortare", newData);
+    this.setState({
+      dataSorted: newData,
+      data: newData
+    });
+  };
 
+  searchFilterFunctionType = val => {
+    const newData = this.state.dataSorted.filter(item => {
+      const itemData = `${item.type}`;
+      const textData = val;
+      console.log("thius", item);
+      return itemData.indexOf(textData) > -1;
+    });
+    this.setState({
+      data: newData
+    });
+
+    if (val == "mixt") {
+      this.setState({
+        data: this.props.places
+      });
+    }
+  };
   searchFilterFunction = text => {
     this.setState({
       value: text
     });
 
-    const newData = this.props.places.filter(item => {
+    const newData = this.state.dataSorted.filter(item => {
       const itemData = `${item.name.toUpperCase()}`;
       const textData = text.toUpperCase();
-
       return itemData.indexOf(textData) > -1;
     });
     this.setState({
       data: newData
     });
   };
-
+  onTypePicked = (itemValue, itemIndex) => {
+    this.setState({ tipSortare: itemValue });
+    console.log("tip sortare", this.state.tipSortare);
+    if (this.state.tipSortare === "rating") {
+      this.searchFilterFunctionRating();
+    } else {
+      this.getDistances();
+    }
+  };
   getDistances = () => {
     const newDistances = this.props.places.map(place => {
       const itemLocation = place.location;
       const dist = geolib.getDistance(itemLocation, this.props.mylocation);
       return { ...place, dist };
-      console.log("thius", item);
-      return itemData.indexOf(textData) > -1;
     });
     const sortData = newDistances.sort((a, b) => a.dist - b.dist);
     this.setState({
+      dataSorted: sortData,
       data: sortData
     });
+
     console.log("Location", sortData);
   };
 
@@ -62,7 +106,7 @@ export default class placeList extends Component {
       <View style={styles.containerHeader}>
         <View>
           <SearchBar
-            placeholder="Type Here..."
+            placeholder="Caută după nume..."
             lightTheme
             round
             onChangeText={text => this.searchFilterFunction(text)}
@@ -70,26 +114,53 @@ export default class placeList extends Component {
             value={this.state.value}
           />
         </View>
-        <View style={styles.wrapper}>
-          <View style={styles.titleWrapper}>
-            <Text style={styles.title}>Go out for launch or dinner</Text>
-            <TouchableOpacity style={styles.seeAllBtn}>
-              <Text style={styles.seeAllBtnText}>See all</Text>
-              <Icon name="angle-right" size={18} />
-            </TouchableOpacity>
-          </View>
+        <View style={styles.containerHeader}>
+          <PickedType onTypePickedProp={this.searchFilterFunctionType} />
         </View>
-        <FlatList
+        <View style={styles.ratingCont}>
+          <Text style={{ fontSize: 18, fontWeight: "bold" }}>Sorteză după</Text>
+          <Picker
+            selectedValue={this.state.tipSortare}
+            style={{ height: 50, width: 150, marginLeft: 40 }}
+            onValueChange={this.onTypePicked}
+          >
+            <Picker.Item label="rating" value="distanta" />
+            <Picker.Item label="distanta" value="rating" />
+          </Picker>
+          <Text />
+        </View>
+
+        {/* <FlatList
           horizontal
           pagingEnabled={true}
           showsHorizontalScrollIndicator={false}
           legacyImplementation={false}
           style={styles.listContainer}
           data={this.state.data}
+          extraData={this.state}
           renderItem={info => (
             <ListItem
               placeName={info.item.name}
               placeImage={info.item.image}
+              placeType={info.item.type}
+              placeRating={info.item.rating.value / info.item.rating.count}
+              placeDistance={info.item.dist / 1000}
+              onItemPressed={() => this.props.onItemSelected(info.item.key)}
+            />
+          )}
+          // ListHeaderComponent={this.renderHeader}
+        /> */}
+        <FlatList
+          style={styles.listContainer}
+          data={this.state.data}
+          extraData={this.state}
+          renderItem={info => (
+            <HorizontalListItem
+              placeName={info.item.name}
+              placeImage={info.item.image}
+              placeType={info.item.type}
+              placeRating={info.item.rating.value / info.item.rating.count}
+              placeAdress={info.item.adress}
               placeDistance={info.item.dist / 1000}
               onItemPressed={() => this.props.onItemSelected(info.item.key)}
             />
@@ -102,42 +173,14 @@ export default class placeList extends Component {
 }
 
 const styles = StyleSheet.create({
-  wrapper: {
-    display: "flex"
-  },
-  titleWrapper: {
-    display: "flex",
+  ratingCont: {
+    flex: 1,
     flexDirection: "row",
-    alignItems: "center",
     justifyContent: "space-between",
-    paddingLeft: 21,
-    paddingRight: 21
-  },
-  title: {
-    fontSize: 22,
-    fontWeight: "600"
-  },
-  seeAllBtn: {
-    marginTop: 2,
-    flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between"
-  },
-  seeAllBtnText: {
-    color: "grey",
-    marginRight: 5
+    marginLeft: 25
   },
   containerHeader: {
-    flex: 1
-  },
-  listContainer: {
-    flex: 1
-  },
-  textName: {
-    fontSize: 24,
-    paddingTop: 15,
-    paddingBottom: 15,
-    paddingLeft: 15,
-    color: "red"
+    paddingTop: 1
   }
 });

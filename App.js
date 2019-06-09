@@ -7,6 +7,7 @@ import SideDrawer from "./src/screens/SideDrawer/SideDrawer";
 import MapSearch from "./src/screens/MapSearch/MapSearch";
 import EditProfile from "./src/screens/UserProfile/UserProfile";
 import configureStore from "./src/store/configureStore";
+import TopPicks from "./src/screens/TopPicks/TopPicks";
 import { Provider } from "react-redux";
 import { goToAuth } from "./src/screens/goToAuth";
 const store = configureStore();
@@ -50,6 +51,12 @@ Navigation.registerComponentWithRedux(
 Navigation.registerComponentWithRedux(
   "places.EditProfile",
   () => EditProfile,
+  Provider,
+  store
+);
+Navigation.registerComponentWithRedux(
+  "places.TopPicks",
+  () => TopPicks,
   Provider,
   store
 );

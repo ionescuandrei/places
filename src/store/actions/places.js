@@ -22,7 +22,9 @@ export const addPlace = (
   type,
   adress,
   phone,
-  rating
+  rating,
+  web,
+  comments
 ) => {
   return dispatch => {
     let authToken;
@@ -55,7 +57,9 @@ export const addPlace = (
           type: type,
           adress: adress,
           phone: phone,
-          rating: rating
+          rating: rating,
+          web: web,
+          comments: comments
         };
         return fetch(
           "https://voucher-221208.firebaseio.com/places.json?auth=" + authToken,
@@ -112,12 +116,12 @@ export const getPlace = () => {
             key: key
           });
         }
-        console.log(places);
+
         dispatch(setPlaces(places));
       })
       .catch(err => {
         dispatch(authLogout());
-        alert("Something went wrong loading ...");
+
         console.log(err);
       });
   };
@@ -150,7 +154,35 @@ export const updatePlace = (key, rating) => {
       .then(res => res.json())
       .then(parsedRes => {
         console.log("Done!");
-        alert("Thank you!");
+      })
+      .catch(err => {
+        alert("Something went wrong, sorry :/");
+        console.log(err);
+      });
+  };
+};
+export const updatePlaceComments = (key, comments) => {
+  return dispatch => {
+    dispatch(authGetToken())
+      .then(token => {
+        return fetch(
+          "https://voucher-221208.firebaseio.com/places/" +
+            key +
+            "/comments" +
+            ".json?auth=" +
+            token,
+          {
+            method: "PUT",
+            body: JSON.stringify(comments)
+          }
+        );
+      })
+      .catch(() => {
+        alert("No valid token found!");
+      })
+      .then(res => res.json())
+      .then(parsedRes => {
+        console.log("Done!", parsedRes);
       })
       .catch(err => {
         alert("Something went wrong, sorry :/");

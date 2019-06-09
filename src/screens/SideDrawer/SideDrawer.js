@@ -6,14 +6,63 @@ import {
   Image,
   StyleSheet,
   Dimensions,
-  TouchableOpacity
+  TouchableOpacity,
+  Switch
 } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import { connect } from "react-redux";
 import { authLogout } from "../../store/actions";
+import firebase from "react-native-firebase";
 class SideDrawer extends Component {
+  ref = firebase.firestore().collection("users");
+  state = {
+    name: "",
+    photo: null,
+    phone: "",
+    location: "",
+    description: "",
+    reviews: "",
+    email: ""
+  };
+
+  componentDidMount() {
+    this.onCollectionUpdate();
+  }
+  onCollectionUpdate = () => {
+    var getDoc = this.ref
+      .doc(this.props.email)
+      .get()
+      .then(doc => {
+        this.setState({
+          name: doc.data().name,
+          email: doc.data().email,
+          phone: doc.data().phone,
+          photo: { uri: doc.data().photo }
+        });
+      })
+      .catch(err => {
+        console.log("Error getting document", err);
+      });
+  };
+  homescreen = () => {
+    Navigation.push("MyStack2", {
+      component: {
+        name: "places.TopPicks",
+        passProps: {
+          places: this.props.places
+        }
+      }
+    });
+    Navigation.mergeOptions("Drawer", {
+      sideMenu: {
+        left: {
+          visible: false
+        }
+      }
+    });
+  };
   pushShareScreen() {
-    Navigation.push("MyStack", {
+    Navigation.push("MyStack2", {
       component: {
         name: "places.SharePlace",
         passProps: {
@@ -36,6 +85,7 @@ class SideDrawer extends Component {
       }
     });
   }
+
   render() {
     return (
       <View
@@ -49,31 +99,38 @@ class SideDrawer extends Component {
             <View style={styles.headerContent}>
               <Image
                 style={styles.avatar}
-                source={{
-                  uri: "https://bootdey.com/img/Content/avatar/avatar6.png"
-                }}
+                source={
+                  this.state.photo === null
+                    ? {
+                        uri:
+                          "https://bootdey.com/img/Content/avatar/avatar6.png"
+                      }
+                    : this.state.photo
+                }
               />
 
-              <Text style={styles.name}>John Doe </Text>
-              <Text style={styles.userInfo}>jhonnydoe@mail.com </Text>
-              <Text style={styles.userInfo}>Florida </Text>
+              <Text style={styles.name}>{this.state.name} </Text>
+              <Text style={styles.userInfo}>{this.state.email}</Text>
+              <Text style={styles.userInfo}> </Text>
             </View>
           </View>
 
           <View style={styles.body}>
-            <View style={styles.item}>
+            <TouchableOpacity onPress={this.homescreen} style={styles.item}>
               <View style={styles.iconContent}>
                 <Image
                   style={styles.icon}
-                  source={{ uri: "https://png.icons8.com/home/win8/50/ffffff" }}
+                  source={{
+                    uri: "https://png.icons8.com/home/win8/50/ffffff"
+                  }}
                 />
               </View>
               <View style={styles.infoContent}>
                 <Text style={styles.info}>Home</Text>
               </View>
-            </View>
+            </TouchableOpacity>
 
-            <View style={styles.item}>
+            <TouchableOpacity onPress={this.setModal} style={styles.item}>
               <View style={styles.iconContent}>
                 <Image
                   style={styles.icon}
@@ -85,19 +142,7 @@ class SideDrawer extends Component {
               <View style={styles.infoContent}>
                 <Text style={styles.info}>Settings</Text>
               </View>
-            </View>
-
-            <View style={styles.item}>
-              <View style={styles.iconContent}>
-                <Image
-                  style={styles.icon}
-                  source={{ uri: "https://png.icons8.com/news/win8/50/ffffff" }}
-                />
-              </View>
-              <View style={styles.infoContent}>
-                <Text style={styles.info}>News</Text>
-              </View>
-            </View>
+            </TouchableOpacity>
 
             <TouchableOpacity
               onPress={this.pushShareScreen}
@@ -197,12 +242,19 @@ const styles = StyleSheet.create({
     color: "#FFFFFF"
   }
 });
+const mapStateToProps = state => {
+  return {
+    name: state.auth.name,
+    email: state.auth.email,
+    places: state.places.places
+  };
+};
 const mapDispatchToProps = dispatch => {
   return {
     onLogout: () => dispatch(authLogout())
   };
 };
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(SideDrawer);

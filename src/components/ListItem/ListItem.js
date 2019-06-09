@@ -9,9 +9,20 @@ const listItem = props => (
         source={props.placeImage}
         style={styles.placeImage}
       />
-      <Text>
-        {props.placeName}-{props.placeDistance} KM
-      </Text>
+      <View style={styles.viewRating}>
+        <Text style={styles.textRating}>{props.placeRating.toFixed(1)}</Text>
+      </View>
+      <View style={styles.nameContainer}>
+        <Text style={styles.nameText}>
+          {props.placeName.length > 13
+            ? props.placeName.slice(0, 13) + "..."
+            : props.placeName}
+        </Text>
+        <Text>{props.placeType}</Text>
+        <Text style={styles.distText}>
+          la {props.placeDistance.toFixed(1)} KM
+        </Text>
+      </View>
     </View>
   </TouchableOpacity>
 );
@@ -24,6 +35,33 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: "#eee",
     position: "relative"
+  },
+  nameContainer: {
+    flex: 1,
+    flexDirection: "column"
+    //justifyContent: "space-between"
+  },
+  nameText: {
+    fontSize: 18,
+    fontWeight: "bold"
+  },
+  distText: {
+    marginLeft: 5,
+    alignSelf: "flex-end"
+  },
+  viewRating: {
+    position: "absolute",
+    bottom: 85,
+    right: 30,
+    width: 30,
+    height: 30,
+    borderRadius: 5,
+    backgroundColor: "#258"
+  },
+  textRating: {
+    fontSize: 15,
+    textAlign: "center",
+    marginTop: 5
   },
   placeImage: {
     marginRight: 8,

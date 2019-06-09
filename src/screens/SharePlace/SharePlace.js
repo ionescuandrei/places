@@ -64,7 +64,17 @@ class SharePlace extends Component {
         rating: {
           value: 5,
           count: 1
-        }
+        },
+        web: {
+          value: ""
+        },
+        comments: [
+          {
+            content: "Este un loc minunat",
+            created: Date.now(),
+            user: this.props.user
+          }
+        ]
       }
     });
   };
@@ -89,6 +99,19 @@ class SharePlace extends Component {
             value: val,
             valid: validate(val, prevState.controls.placeName.validationRules),
             touched: true
+          }
+        }
+      };
+    });
+  };
+  placeWebHandler = val => {
+    this.setState(prevState => {
+      return {
+        controls: {
+          ...prevState.controls,
+          web: {
+            ...prevState.controls.web,
+            value: val
           }
         }
       };
@@ -151,7 +174,9 @@ class SharePlace extends Component {
       this.state.controls.type.value,
       this.state.controls.adress.value,
       this.state.controls.phone.value,
-      this.state.controls.rating
+      this.state.controls.rating,
+      this.state.controls.web,
+      this.state.controls.comments
     );
 
     this.reset();
@@ -237,6 +262,12 @@ class SharePlace extends Component {
               placeholder="Phone"
             />
           </View>
+          <View style={styles.placeInputText}>
+            <DefaultInput
+              onChangeText={this.placeWebHandler}
+              placeholder="Web"
+            />
+          </View>
           <PickedType onTypePickedProp={this.pickedTypeHandler} />
           {submitButton}
         </View>
@@ -287,15 +318,36 @@ const styles = StyleSheet.create({
 });
 const mapStateToProps = state => {
   return {
+    user: state.auth.email,
     isLoading: state.ui.isLoading,
     placeAdded: state.places.placeAdded
   };
 };
 const mapDispatchToProps = dispatch => {
   return {
-    onAddPlace: (placeName, location, image, type, adress, phone, rating) =>
+    onAddPlace: (
+      placeName,
+      location,
+      image,
+      type,
+      adress,
+      phone,
+      rating,
+      web,
+      comments
+    ) =>
       dispatch(
-        addPlace(placeName, location, image, type, adress, phone, rating)
+        addPlace(
+          placeName,
+          location,
+          image,
+          type,
+          adress,
+          phone,
+          rating,
+          web,
+          comments
+        )
       ),
     onStartAddedPlace: () => dispatch(startAddPlace())
   };

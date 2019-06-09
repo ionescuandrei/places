@@ -11,10 +11,10 @@ const userReducer = (state = initialState, action) => {
           key: Math.random(),
           name: action.name,
           //   email: action.email,
-          //   location: action.location,
+
           phone: action.phone,
-          photo: action.photo
-          //   reviews: action.reviews
+          photo: action.photo,
+          location: action.location
         })
       };
     default:

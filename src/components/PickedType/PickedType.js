@@ -15,7 +15,7 @@ export default class PickedType extends Component {
     return (
       <View style={styles.container}>
         <View style={styles.textView}>
-          <Text style={styles.text}>Cuzine</Text>
+          <Text style={styles.text}> Specific</Text>
         </View>
         <View style={styles.pickerView}>
           <Picker
@@ -28,7 +28,12 @@ export default class PickedType extends Component {
             <Picker.Item label="Grecesc" value="grecesc" />
             <Picker.Item label="Romanesc" value="romanesc" />
             <Picker.Item label="Sarbesc" value="sarbesc" />
-            <Picker.Item label="Mixt" value="mixt" />
+            <Picker.Item label="Frantuzesc" value="frantuzesc" />
+            <Picker.Item label="Rusesc" value="rusesc" />
+            <Picker.Item label="Bulgaresc" value="bulgaresc" />
+            <Picker.Item label="Unguresc" value="unguresc" />
+            <Picker.Item label="Oriental" value="oriental" />
+            <Picker.Item label="Toate" value="mixt" />
           </Picker>
         </View>
       </View>
@@ -39,11 +44,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: "row",
-    justifyContent: "space-between"
+    justifyContent: "space-between",
+    alignItems: "center"
   },
   picker: {
     width: 150,
-    height: 50
+    height: 20
   },
   text: {
     fontSize: 18,
@@ -51,7 +57,7 @@ const styles = StyleSheet.create({
   },
   textView: {
     flex: 1,
-    paddingTop: 10,
+
     paddingLeft: 20
   },
   pickerView: {

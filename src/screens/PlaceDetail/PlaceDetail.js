@@ -19,47 +19,70 @@ import { deletePlace } from "../../store/actions/index";
 import GetDirections from "../../components/Direction/getDirections";
 import { Badge, AirbnbRating, Divider } from "react-native-elements";
 import { updatePlace } from "../../store/actions/places";
+import firebase from "react-native-firebase";
+import ListOfComments from "../../components/ListComments/ListComments";
 
 class PlaceDetail extends Component {
   constructor(props) {
     super(props);
+    this.ref = firebase.firestore().collection("users");
     this.state = {
       viewMode: "portrait",
       rating: props.selectedPlace.rating,
       starchoose: true,
-      review: {
-        numeUser: "",
-        count: 0,
-        comment: ""
-      }
+      user: null
     };
   }
   componentDidMount() {
     Dimensions.addEventListener("change", this.updateStyles);
     this.ratingCompleted = this.ratingCompleted.bind(this);
-    console.log("this is props", this.state.rating);
+    this.onCollectionUpdate();
   }
-
+  componentDidUpdate() {
+    console.log("state rating", this.state.rating);
+    this.props.onUpdateRating(this.props.selectedPlace.key, this.state.rating);
+  }
+  onCollectionUpdate = () => {
+    var getDoc = this.ref
+      .doc(this.props.email)
+      .get()
+      .then(doc => {
+        this.setState({
+          user: doc.data()
+        });
+      })
+      .catch(err => {
+        console.log("Error getting document", err);
+      });
+  };
+  handleClickWeb = () => {
+    Linking.canOpenURL(this.props.selectedPlace.web.value).then(supported => {
+      if (supported) {
+        Linking.openURL(this.props.selectedPlace.web.value);
+      } else {
+        console.log(
+          "Don't know how to open URI: " + this.props.selectedPlace.web.value
+        );
+      }
+    });
+  };
   placeDeletedHandler = () => {
     Dimensions.removeEventListener("change", this.updateStyles);
     this.props.onDeletePlace(this.props.selectedPlace.key);
     Navigation.pop("MyStack");
   };
   ratingCompleted(rat) {
-    if (this.state.starchoose) {
-      this.setState(state => {
-        return {
-          rating: {
-            value: state.rating.value + rat,
-            count: state.rating.count + 1,
-            starchoose: false
-          }
-        };
-      });
-    }
+    this.setState(state => {
+      return {
+        rating: {
+          value: state.rating.value + rat,
+          count: state.rating.count + 1,
+          starchoose: false
+        }
+      };
+    });
 
-    this.props.onUpdateRating(this.props.selectedPlace.key, this.state.rating);
-    console.log("state", this.state.rating);
+    console.log("state rating", this.state.rating, rat);
   }
   updateStyles = dims => {
     this.setState({
@@ -85,11 +108,9 @@ class PlaceDetail extends Component {
       .catch(err => console.log(err));
   };
   render() {
-    console.log("value", this.state.rating.value);
-    console.log("Count", this.state.rating.count);
     const score = this.state.rating.value / this.state.rating.count;
     return (
-      <ScrollView style={styles.scroll}>
+      <ScrollView style={styles.styleScrol}>
         <View
           style={[
             styles.container,
@@ -110,7 +131,7 @@ class PlaceDetail extends Component {
                 <Text style={styles.placeName}>
                   {this.props.selectedPlace.name}
                 </Text>
-                <Text>Cusine: {this.props.selectedPlace.type}</Text>
+                <Text>Specific: {this.props.selectedPlace.type}</Text>
               </View>
 
               <View style={styles.badgeContaniner}>
@@ -118,10 +139,21 @@ class PlaceDetail extends Component {
               </View>
             </View>
             <Divider style={{ margin: 10, backgroundColor: "#333" }} />
+            <GetDirections
+              mylocation={this.props.mylocation}
+              location={this.props.selectedPlace.location}
+            />
+            <Divider style={{ margin: 10, backgroundColor: "#333" }} />
+            <TouchableOpacity onPress={this.handleClickWeb}>
+              <View style={styles.button}>
+                <Text style={styles.textWeb}>
+                  {this.props.selectedPlace.web.value}
+                </Text>
+              </View>
+            </TouchableOpacity>
+            <Divider style={{ margin: 10, backgroundColor: "#333" }} />
             <View style={styles.adressContainer}>
-              <Text style={styles.adressStyle}>
-                {this.props.selectedPlace.adress}
-              </Text>
+              <Text style={styles.adressStyle}>Pentru rezervări sună la</Text>
               <TouchableOpacity onPress={this.callNumber}>
                 <View style={styles.callButton}>
                   <Icon
@@ -137,23 +169,25 @@ class PlaceDetail extends Component {
               <AirbnbRating
                 count={5}
                 reviews={[
-                  "Bad",
-                  "Good",
-                  "Very Good",
-                  "Amazing",
-                  "Unbelievable"
+                  "Rău",
+                  "Mediocru",
+                  "Bun",
+                  "Foarte Bun",
+                  "Extraordinar"
                 ]}
-                defaultRating={2}
-                size={15}
+                defaultRating={3}
+                size={30}
                 onFinishRating={this.ratingCompleted}
               />
             </View>
-            <GetDirections
-              mylocation={this.props.mylocation}
-              location={this.props.selectedPlace.location}
-            />
-
-            <TouchableOpacity onPress={this.placeDeletedHandler}>
+            <Divider style={{ margin: 10, backgroundColor: "#333" }} />
+            <View style={styles.adressContainer}>
+              <Text style={styles.adressStyle}>
+                Adresa:
+                {this.props.selectedPlace.adress}
+              </Text>
+            </View>
+            {/* <TouchableOpacity onPress={this.placeDeletedHandler}>
               <View style={styles.deleteButton}>
                 <Icon
                   size={30}
@@ -161,7 +195,17 @@ class PlaceDetail extends Component {
                   color="red"
                 />
               </View>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
+
+            <Divider style={{ margin: 10, backgroundColor: "#333" }} />
+            <View>
+              <Text style={{ fontSize: 20, fontWeight: "200" }}>Recenzii</Text>
+              <ListOfComments
+                keie={this.props.selectedPlace.key}
+                user={this.state.user}
+                comments={this.props.selectedPlace.comments}
+              />
+            </View>
           </View>
         </View>
       </ScrollView>
@@ -170,7 +214,7 @@ class PlaceDetail extends Component {
 }
 
 const styles = StyleSheet.create({
-  scroll: { height: "100%", width: "100%" },
+  styleScrol: { height: "100%", width: "100%" },
   container: {
     display: "flex"
   },
@@ -224,9 +268,18 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "row",
     justifyContent: "space-between"
+  },
+  textWeb: {
+    fontSize: 20,
+    fontFamily: "Times New Roman",
+    alignSelf: "center"
   }
 });
-
+const mapStateToProps = state => {
+  return {
+    email: state.auth.email
+  };
+};
 const mapDispatchToProps = dispatch => {
   return {
     onDeletePlace: key => dispatch(deletePlace(key)),
@@ -235,6 +288,6 @@ const mapDispatchToProps = dispatch => {
 };
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(PlaceDetail);

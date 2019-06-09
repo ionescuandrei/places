@@ -3,7 +3,8 @@ export {
   deletePlace,
   getPlace,
   placeAdded,
-  startAddPlace
+  startAddPlace,
+  updatePlaceComments
 } from "./places";
 export { tryAuth, authGetToken, authAutoSignIn, authLogout } from "./auth";
 export { uiStartLoading, uiStopLoading } from "./ui";
