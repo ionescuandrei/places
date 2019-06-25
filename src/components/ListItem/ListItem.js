@@ -1,6 +1,5 @@
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
-
 const listItem = props => (
   <TouchableOpacity onPress={props.onItemPressed}>
     <View style={styles.listItem}>
@@ -19,9 +18,6 @@ const listItem = props => (
             : props.placeName}
         </Text>
         <Text>{props.placeType}</Text>
-        <Text style={styles.distText}>
-          la {props.placeDistance.toFixed(1)} KM
-        </Text>
       </View>
     </View>
   </TouchableOpacity>
@@ -51,7 +47,7 @@ const styles = StyleSheet.create({
   },
   viewRating: {
     position: "absolute",
-    bottom: 85,
+    bottom: 80,
     right: 30,
     width: 30,
     height: 30,

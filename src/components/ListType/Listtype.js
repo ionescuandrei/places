@@ -1,34 +1,27 @@
 import React, { Component } from "react";
 import { StyleSheet, FlatList, View, Text } from "react-native";
-
-import HorizontalListItem from "../HorizontalListItem/HorizontalListItem";
-
-import PickedType from "../PickedType/PickedType";
-import NearLocation from "../NearLocations/NearLocations";
-import geolib from "geolib";
+import ListItem from "../ListItem/ListItem";
 
 export default class ListType extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      data: this.props.places
-    };
   }
-
   render() {
     return (
       <View>
         <FlatList
+          horizontal={true}
+          pagingEnabled={true}
+          showsHorizontalScrollIndicator={false}
+          legacyImplementation={false}
           style={styles.listContainer}
-          data={this.state.data}
-          extraData={this.state}
+          data={this.props.places}
           renderItem={info => (
-            <HorizontalListItem
+            <ListItem
               placeName={info.item.name}
               placeImage={info.item.image}
               placeType={info.item.type}
               placeRating={info.item.rating.value / info.item.rating.count}
-              placeAdress={info.item.adress}
               onItemPressed={() => this.props.onItemSelected(info.item.key)}
             />
           )}

@@ -30,9 +30,12 @@ class PlaceDetail extends Component {
       viewMode: "portrait",
       rating: props.selectedPlace.rating,
       starchoose: true,
-      user: null
+      user: null,
+      isMounted: false
     };
+    this.getRealtimeUpdates = this.getRealtimeUpdates.bind(this);
   }
+
   componentDidMount() {
     Dimensions.addEventListener("change", this.updateStyles);
     this.ratingCompleted = this.ratingCompleted.bind(this);
@@ -42,6 +45,10 @@ class PlaceDetail extends Component {
     console.log("state rating", this.state.rating);
     this.props.onUpdateRating(this.props.selectedPlace.key, this.state.rating);
   }
+  componentWillUnmount() {
+    this.getRealtimeUpdates();
+  }
+
   onCollectionUpdate = () => {
     var getDoc = this.ref
       .doc(this.props.email)
@@ -55,6 +62,19 @@ class PlaceDetail extends Component {
         console.log("Error getting document", err);
       });
   };
+  getRealtimeUpdates() {
+    let unsubscribe = this.ref.onSnapshot(function(querySnapshot) {
+      querySnapshot.forEach(function(doc) {
+        if (doc && doc.exists) {
+          const myData = doc.data();
+          console.log("subscript", myData);
+        }
+      });
+    });
+    console.log("subscript");
+    unsubscribe();
+  }
+
   handleClickWeb = () => {
     Linking.canOpenURL(this.props.selectedPlace.web.value).then(supported => {
       if (supported) {

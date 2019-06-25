@@ -58,9 +58,9 @@ export default class placeList extends Component {
     });
 
     if (val == "mixt") {
-      this.setState({
-        data: this.props.places
-      });
+      this.setState(state => ({
+        data: state.dataSorted
+      }));
     }
   };
   searchFilterFunction = text => {
@@ -102,6 +102,7 @@ export default class placeList extends Component {
   };
 
   render() {
+    console.log("in render", this.state.data);
     return (
       <View style={styles.containerHeader}>
         <View>
@@ -130,26 +131,6 @@ export default class placeList extends Component {
           <Text />
         </View>
 
-        {/* <FlatList
-          horizontal
-          pagingEnabled={true}
-          showsHorizontalScrollIndicator={false}
-          legacyImplementation={false}
-          style={styles.listContainer}
-          data={this.state.data}
-          extraData={this.state}
-          renderItem={info => (
-            <ListItem
-              placeName={info.item.name}
-              placeImage={info.item.image}
-              placeType={info.item.type}
-              placeRating={info.item.rating.value / info.item.rating.count}
-              placeDistance={info.item.dist / 1000}
-              onItemPressed={() => this.props.onItemSelected(info.item.key)}
-            />
-          )}
-          // ListHeaderComponent={this.renderHeader}
-        /> */}
         <FlatList
           style={styles.listContainer}
           data={this.state.data}

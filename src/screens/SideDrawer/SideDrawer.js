@@ -44,6 +44,20 @@ class SideDrawer extends Component {
         console.log("Error getting document", err);
       });
   };
+  settings = () => {
+    Navigation.push("MyStack2", {
+      component: {
+        name: "places.Settings"
+      }
+    });
+    Navigation.mergeOptions("Drawer", {
+      sideMenu: {
+        left: {
+          visible: false
+        }
+      }
+    });
+  };
   homescreen = () => {
     Navigation.push("MyStack2", {
       component: {
@@ -71,7 +85,7 @@ class SideDrawer extends Component {
         options: {
           topBar: {
             title: {
-              text: "Add a restaurant"
+              text: "Adauga restaurant"
             }
           }
         }
@@ -126,11 +140,11 @@ class SideDrawer extends Component {
                 />
               </View>
               <View style={styles.infoContent}>
-                <Text style={styles.info}>Home</Text>
+                <Text style={styles.info}>Top</Text>
               </View>
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={this.setModal} style={styles.item}>
+            <TouchableOpacity onPress={this.settings} style={styles.item}>
               <View style={styles.iconContent}>
                 <Image
                   style={styles.icon}
@@ -140,7 +154,7 @@ class SideDrawer extends Component {
                 />
               </View>
               <View style={styles.infoContent}>
-                <Text style={styles.info}>Settings</Text>
+                <Text style={styles.info}>Setari</Text>
               </View>
             </TouchableOpacity>
 
@@ -157,7 +171,7 @@ class SideDrawer extends Component {
                 />
               </View>
               <View style={styles.infoContent}>
-                <Text style={styles.info}>Share a restaurant</Text>
+                <Text style={styles.info}>Adauga restaurant</Text>
               </View>
             </TouchableOpacity>
             <TouchableOpacity onPress={this.props.onLogout} style={styles.item}>

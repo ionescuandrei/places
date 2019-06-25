@@ -212,7 +212,7 @@ class SharePlace extends Component {
   render() {
     let submitButton = (
       <Button
-        title="Share the Place!"
+        title="Adauga!"
         onPress={this.placeAddedHandler}
         disabled={
           !this.state.controls.placeName.valid ||
@@ -227,9 +227,6 @@ class SharePlace extends Component {
     return (
       <ScrollView>
         <View style={styles.container}>
-          <MainText>
-            <HeadingText>Share a Restaurant with us!</HeadingText>
-          </MainText>
           <View style={styles.previewImage}>
             <PickImage
               onImagePicked={this.imagePickedHandler}
@@ -253,13 +250,13 @@ class SharePlace extends Component {
           <View style={styles.placeInputText}>
             <DefaultInput
               onChangeText={this.placeAdressHandler}
-              placeholder="Adress"
+              placeholder="Adresa"
             />
           </View>
           <View style={styles.placeInputText}>
             <DefaultInput
               onChangeText={this.placePhonesHandler}
-              placeholder="Phone"
+              placeholder="Telefon"
             />
           </View>
           <View style={styles.placeInputText}>
@@ -296,8 +293,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: "90%",
     height: "90%",
-    marginLeft: 10,
-    marginRight: 10
+    marginLeft: 5,
+    marginRight: 5,
+    marginTop: 15
   },
   pickMap: {
     flex: 1,

@@ -26,6 +26,9 @@ const HorizontallistItem = props => (
         <View style={styles.viewRating}>
           <Text style={styles.textRating}>{props.placeRating.toFixed(1)}</Text>
         </View>
+        <View style={styles.textDistance}>
+          <Text style={styles.t}>la {props.placeDistance.toFixed(1)} KM</Text>
+        </View>
       </View>
     </View>
   </TouchableOpacity>
