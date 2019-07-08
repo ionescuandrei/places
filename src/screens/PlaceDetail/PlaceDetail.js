@@ -27,7 +27,8 @@ class PlaceDetail extends Component {
     super(props);
     this.ref = firebase.firestore().collection("users");
     this.state = {
-      viewMode: "portrait",
+      viewMode:
+        Dimensions.get("window").height > 500 ? "portrait" : "landscape",
       rating: props.selectedPlace.rating,
       starchoose: true,
       user: null,
@@ -42,7 +43,6 @@ class PlaceDetail extends Component {
     this.onCollectionUpdate();
   }
   componentDidUpdate() {
-    console.log("state rating", this.state.rating);
     this.props.onUpdateRating(this.props.selectedPlace.key, this.state.rating);
   }
   componentWillUnmount() {
@@ -142,7 +142,11 @@ class PlaceDetail extends Component {
           <View>
             <Image
               source={this.props.selectedPlace.image}
-              style={styles.placeImage}
+              style={
+                this.state.viewMode === "portrait"
+                  ? styles.placeImagePortret
+                  : styles.placeImageLandscape
+              }
             />
           </View>
           <View style={styles.subContainer}>
@@ -245,10 +249,15 @@ const styles = StyleSheet.create({
   portraitContainer: {
     flexDirection: "column"
   },
-  landscapeContainer: {
-    flexDirection: "row"
+  // landscapeContainer: {
+  //   flexDirection: "row"
+  // },
+  placeImagePortret: {
+    width: 500,
+    height: 250
   },
-  placeImage: {
+  placeImageLandscape: {
+    alignSelf: "center",
     width: 500,
     height: 250
   },

@@ -23,6 +23,7 @@ export default class PickedType extends Component {
             style={styles.picker}
             onValueChange={this.onTypePicked}
           >
+            <Picker.Item label="Toate" value="mixt" />
             <Picker.Item label="Italian" value="italian" />
             <Picker.Item label="Chinez" value="chinez" />
             <Picker.Item label="Grecesc" value="grecesc" />
@@ -33,7 +34,6 @@ export default class PickedType extends Component {
             <Picker.Item label="Bulgaresc" value="bulgaresc" />
             <Picker.Item label="Unguresc" value="unguresc" />
             <Picker.Item label="Oriental" value="oriental" />
-            <Picker.Item label="Toate" value="mixt" />
           </Picker>
         </View>
       </View>

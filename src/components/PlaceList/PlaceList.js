@@ -8,11 +8,10 @@ import {
   Switch,
   Picker
 } from "react-native";
-import ListItem from "../ListItem/ListItem";
 import HorizontalListItem from "../HorizontalListItem/HorizontalListItem";
 import { SearchBar } from "react-native-elements";
 import PickedType from "../PickedType/PickedType";
-import NearLocation from "../NearLocations/NearLocations";
+
 import geolib from "geolib";
 
 export default class placeList extends Component {
@@ -22,69 +21,70 @@ export default class placeList extends Component {
       data: [],
       dataSorted: [],
       typeValue: "mixt",
-      tipSortare: "rating"
+      tipSortare: "distanta"
     };
     this.getDistances = this.getDistances.bind(this);
     this.onTypePicked = this.onTypePicked.bind(this);
   }
   componentWillMount() {
-    this.getDistances();
+    const sortData = this.getDistances();
+    this.setState({ dataSorted: sortData, data: sortData });
   }
   componentDidMount() {
-    this.getDistances();
+    const sortData = this.getDistances();
+    this.setState({ dataSorted: sortData, data: sortData });
   }
   searchFilterFunctionRating = () => {
-    const newData = this.state.dataSorted.sort((item1, item2) => {
-      item1 = item1.rating.value / item1.rating.count;
-      item2 = item2.rating.value / item2.rating.count;
-      return item1 < item2;
+    let newData = [...this.state.dataSorted];
+
+    let a = newData.sort((item1, item2) => {
+      let i1 = (item1.rating.value * 1.1) / item1.rating.count;
+      let i2 = (item2.rating.value * 1.1) / item2.rating.count;
+      return i2 - i1;
     });
-    console.log("sortare", newData);
-    this.setState({
-      dataSorted: newData,
-      data: newData
-    });
+    return a;
   };
 
   searchFilterFunctionType = val => {
     const newData = this.state.dataSorted.filter(item => {
       const itemData = `${item.type}`;
       const textData = val;
-      console.log("thius", item);
       return itemData.indexOf(textData) > -1;
-    });
-    this.setState({
-      data: newData
     });
 
     if (val == "mixt") {
       this.setState(state => ({
         data: state.dataSorted
       }));
+    } else {
+      this.setState({
+        data: newData
+      });
     }
   };
   searchFilterFunction = text => {
-    this.setState({
-      value: text
-    });
-
     const newData = this.state.dataSorted.filter(item => {
       const itemData = `${item.name.toUpperCase()}`;
       const textData = text.toUpperCase();
       return itemData.indexOf(textData) > -1;
     });
     this.setState({
+      value: text,
       data: newData
     });
   };
   onTypePicked = (itemValue, itemIndex) => {
-    this.setState({ tipSortare: itemValue });
-    console.log("tip sortare", this.state.tipSortare);
-    if (this.state.tipSortare === "rating") {
-      this.searchFilterFunctionRating();
+    let sortedData = null;
+    if (itemValue === "rating") {
+      sortedData = this.searchFilterFunctionRating();
     } else {
-      this.getDistances();
+      sortedData = this.getDistances();
     }
+    this.setState({
+      tipSortare: itemValue,
+      dataSorted: sortedData,
+      data: sortedData
+    });
   };
   getDistances = () => {
     const newDistances = this.props.places.map(place => {
@@ -93,16 +93,11 @@ export default class placeList extends Component {
       return { ...place, dist };
     });
     const sortData = newDistances.sort((a, b) => a.dist - b.dist);
-    this.setState({
-      dataSorted: sortData,
-      data: sortData
-    });
 
-    console.log("Location", sortData);
+    return sortData;
   };
 
   render() {
-    console.log("in render", this.state.data);
     return (
       <View style={styles.containerHeader}>
         <View>
@@ -125,8 +120,8 @@ export default class placeList extends Component {
             style={{ height: 50, width: 150, marginLeft: 40 }}
             onValueChange={this.onTypePicked}
           >
-            <Picker.Item label="rating" value="distanta" />
-            <Picker.Item label="distanta" value="rating" />
+            <Picker.Item label="distanta" value="distanta" />
+            <Picker.Item label="rating" value="rating" />
           </Picker>
           <Text />
         </View>

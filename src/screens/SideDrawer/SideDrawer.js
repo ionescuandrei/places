@@ -7,7 +7,7 @@ import {
   StyleSheet,
   Dimensions,
   TouchableOpacity,
-  Switch
+  ScrollView
 } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import { connect } from "react-redux";
@@ -102,94 +102,99 @@ class SideDrawer extends Component {
 
   render() {
     return (
-      <View
-        style={[
-          styles.container,
-          { width: Dimensions.get("window").width * 0.8 }
-        ]}
-      >
-        <View style={styles.container}>
-          <View style={styles.header}>
-            <View style={styles.headerContent}>
-              <Image
-                style={styles.avatar}
-                source={
-                  this.state.photo === null
-                    ? {
-                        uri:
-                          "https://bootdey.com/img/Content/avatar/avatar6.png"
-                      }
-                    : this.state.photo
-                }
-              />
+      <ScrollView>
+        <View
+          style={[
+            styles.container,
+            { width: Dimensions.get("window").width * 0.8 }
+          ]}
+        >
+          <View style={styles.container}>
+            <View style={styles.header}>
+              <View style={styles.headerContent}>
+                <Image
+                  style={styles.avatar}
+                  source={
+                    this.state.photo === null
+                      ? {
+                          uri:
+                            "https://bootdey.com/img/Content/avatar/avatar6.png"
+                        }
+                      : this.state.photo
+                  }
+                />
 
-              <Text style={styles.name}>{this.state.name} </Text>
-              <Text style={styles.userInfo}>{this.state.email}</Text>
-              <Text style={styles.userInfo}> </Text>
+                <Text style={styles.name}>{this.state.name} </Text>
+                <Text style={styles.userInfo}>{this.state.email}</Text>
+                <Text style={styles.userInfo}> </Text>
+              </View>
+            </View>
+
+            <View style={styles.body}>
+              <TouchableOpacity onPress={this.homescreen} style={styles.item}>
+                <View style={styles.iconContent}>
+                  <Image
+                    style={styles.icon}
+                    source={{
+                      uri: "https://png.icons8.com/home/win8/50/ffffff"
+                    }}
+                  />
+                </View>
+                <View style={styles.infoContent}>
+                  <Text style={styles.info}>Top</Text>
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity onPress={this.settings} style={styles.item}>
+                <View style={styles.iconContent}>
+                  <Image
+                    style={styles.icon}
+                    source={{
+                      uri: "https://png.icons8.com/settings/win8/50/ffffff"
+                    }}
+                  />
+                </View>
+                <View style={styles.infoContent}>
+                  <Text style={styles.info}>Setari</Text>
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                onPress={this.pushShareScreen}
+                style={styles.item}
+              >
+                <View style={styles.iconContent}>
+                  <Icon
+                    name="ios-share"
+                    size={30}
+                    color="#FFFFFF"
+                    style={styles.icon}
+                  />
+                </View>
+                <View style={styles.infoContent}>
+                  <Text style={styles.info}>Adauga restaurant</Text>
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={this.props.onLogout}
+                style={styles.item}
+              >
+                <View style={styles.iconContent}>
+                  <Icon
+                    name="ios-log-out"
+                    size={30}
+                    color="#FFFFFF"
+                    style={styles.icon}
+                  />
+                </View>
+                <View style={styles.infoContent}>
+                  <Text style={styles.info}>Sign out</Text>
+                </View>
+              </TouchableOpacity>
             </View>
           </View>
-
-          <View style={styles.body}>
-            <TouchableOpacity onPress={this.homescreen} style={styles.item}>
-              <View style={styles.iconContent}>
-                <Image
-                  style={styles.icon}
-                  source={{
-                    uri: "https://png.icons8.com/home/win8/50/ffffff"
-                  }}
-                />
-              </View>
-              <View style={styles.infoContent}>
-                <Text style={styles.info}>Top</Text>
-              </View>
-            </TouchableOpacity>
-
-            <TouchableOpacity onPress={this.settings} style={styles.item}>
-              <View style={styles.iconContent}>
-                <Image
-                  style={styles.icon}
-                  source={{
-                    uri: "https://png.icons8.com/settings/win8/50/ffffff"
-                  }}
-                />
-              </View>
-              <View style={styles.infoContent}>
-                <Text style={styles.info}>Setari</Text>
-              </View>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              onPress={this.pushShareScreen}
-              style={styles.item}
-            >
-              <View style={styles.iconContent}>
-                <Icon
-                  name="ios-share"
-                  size={30}
-                  color="#FFFFFF"
-                  style={styles.icon}
-                />
-              </View>
-              <View style={styles.infoContent}>
-                <Text style={styles.info}>Adauga restaurant</Text>
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={this.props.onLogout} style={styles.item}>
-              <View style={styles.iconContent}>
-                <Icon
-                  name="ios-log-out"
-                  size={30}
-                  color="#FFFFFF"
-                  style={styles.icon}
-                />
-              </View>
-              <View style={styles.infoContent}>
-                <Text style={styles.info}>Sign out</Text>
-              </View>
-            </TouchableOpacity>
-          </View>
         </View>
-      </View>
+      </ScrollView>
     );
   }
 }

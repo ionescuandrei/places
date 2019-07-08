@@ -60,6 +60,7 @@ class AuthScreen extends React.Component {
   }
   componentWillUnmount() {
     Dimensions.removeEventListener("change", this.updateStyles);
+    this.getRealtimeUpdates();
   }
   componentDidMount() {
     this.props.onAutoSignIn();
@@ -71,6 +72,18 @@ class AuthScreen extends React.Component {
       };
     });
   };
+  getRealtimeUpdates() {
+    let unsubscribe = this.ref.onSnapshot(function(querySnapshot) {
+      querySnapshot.forEach(function(doc) {
+        if (doc && doc.exists) {
+          const myData = doc.data();
+          console.log("subscript", myData);
+        }
+      });
+    });
+    console.log("subscript");
+    unsubscribe();
+  }
   updateStyles = dims => {
     this.setState({
       viewMode: dims.window.height > 500 ? "portrait" : "landscape"

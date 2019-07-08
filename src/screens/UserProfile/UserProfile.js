@@ -1,6 +1,13 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  ScrollView
+} from "react-native";
 import { Navigation } from "react-native-navigation";
 import { addUserProfile } from "../../store/actions/users";
 import AvatarPickPhoto from "../../components/AvatarPickPhoto/AvatarPickPhoto";
@@ -82,44 +89,46 @@ class EditProfile extends Component {
 
   render() {
     return (
-      <View style={styles.container}>
-        <View style={styles.header}>
-          <AvatarPickPhoto
-            onImagePicked={this.photoPickedHandler}
-            ref={ref => (this.pickedImage = ref)}
-            nume={this.state.name}
-            photo={this.state.photo}
-          />
-        </View>
+      <ScrollView>
+        <View style={styles.container}>
+          <View style={styles.header}>
+            <AvatarPickPhoto
+              onImagePicked={this.photoPickedHandler}
+              ref={ref => (this.pickedImage = ref)}
+              nume={this.state.name}
+              photo={this.state.photo}
+            />
+          </View>
 
-        <View style={styles.body}>
-          <View style={styles.bodyContent}>
-            <Text style={styles.name}>{this.state.name}</Text>
-            <Text style={styles.info}>{this.state.email}</Text>
-            <View style={styles.textIn}>
-              <Input
-                onChangeText={this.phoneHandler.bind(this)}
-                placeholder={this.state.phone}
-                value={this.state.phone}
-              />
-            </View>
-            <View style={styles.textIn}>
-              <Input
-                placeholder={this.state.location}
-                onChangeText={this.locationHandler.bind(this)}
-                value={this.state.location}
-              />
-            </View>
+          <View style={styles.body}>
+            <View style={styles.bodyContent}>
+              <Text style={styles.name}>{this.state.name}</Text>
+              <Text style={styles.info}>{this.state.email}</Text>
+              <View style={styles.textIn}>
+                <Input
+                  onChangeText={this.phoneHandler.bind(this)}
+                  placeholder={this.state.phone}
+                  value={this.state.phone}
+                />
+              </View>
+              <View style={styles.textIn}>
+                <Input
+                  placeholder={this.state.location}
+                  onChangeText={this.locationHandler.bind(this)}
+                  value={this.state.location}
+                />
+              </View>
 
-            <TouchableOpacity
-              onPress={this.userAddHandler}
-              style={styles.buttonContainer}
-            >
-              <Text>Save</Text>
-            </TouchableOpacity>
+              <TouchableOpacity
+                onPress={this.userAddHandler}
+                style={styles.buttonContainer}
+              >
+                <Text>Save</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
-      </View>
+      </ScrollView>
     );
   }
 }
